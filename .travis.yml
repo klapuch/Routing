@@ -1,0 +1,28 @@
+sudo: required
+
+language: php
+
+php:
+  - 7.1
+
+before_install:
+  - composer self-update
+
+install:
+  - composer install --no-interaction --prefer-dist --no-scripts --no-progress --no-suggest --optimize-autoloader --classmap-authoritative
+
+script:
+  - ./vendor/bin/phing ci
+
+after_script:
+    - >
+        wget https://github.com/satooshi/php-coveralls/releases/download/v1.0.1/coveralls.phar
+        && php coveralls.phar --verbose --config Tests/.coveralls.yml
+        || true;
+
+after_failure:
+  - for i in $(find Tests -name \*.actual); do echo "--- $i"; cat $i; echo; echo; done
+
+cache:
+    directories:
+      - $HOME/.composer/cache
