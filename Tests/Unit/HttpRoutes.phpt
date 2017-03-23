@@ -67,6 +67,60 @@ final class HttpRoutes extends Tester\TestCase {
 		$routes = new Routing\HttpRoutes($list);
 		Assert::same('Foo::render', $routes->match(new Uri\FakeUri(null, '/foo')));
 	}
+
+	public function testMatchWithSinglePlaceholder() {
+		$list = new Ini\Fake(['Foo::render' => '/books/{id}']);
+		$routes = new Routing\HttpRoutes($list);
+		Assert::same(
+			'Foo::render',
+			$routes->match(new Uri\FakeUri(null, '/books/1'))
+		);
+	}
+
+	/**
+	 * @throws \UnexpectedValueException HTTP route does not exist
+	 */
+	public function testThrowingOnPlaceholderAsNestedParameter() {
+		$list = new Ini\Fake(['Foo::render' => '/books/{id}']);
+		$routes = new Routing\HttpRoutes($list);
+		$routes->match(new Uri\FakeUri(null, '/books/foo/bar'));
+	}
+
+	/**
+	 * @throws \UnexpectedValueException HTTP route does not exist
+	 */
+	public function testThrowingOnSomePlaceholderMatch() {
+		$list = new Ini\Fake(['Foo::render' => '/books/{id}']);
+		$routes = new Routing\HttpRoutes($list);
+		$routes->match(new Uri\FakeUri(null, 'blabla/books/foo'));
+	}
+
+	/**
+	 * @throws \UnexpectedValueException HTTP route does not exist
+	 */
+	public function testThrowingOnDirectPlaceholderParameter() {
+		$list = new Ini\Fake(['Foo::render' => '/books/{id}']);
+		$routes = new Routing\HttpRoutes($list);
+		$routes->match(new Uri\FakeUri(null, '/books/{id}'));
+	}
+
+	public function testMatchMultipleDifferentPlaceholdersConsecutiveInRow() {
+		$list = new Ini\Fake(['Foo::render' => '/books/{id}/{key}']);
+		$routes = new Routing\HttpRoutes($list);
+		Assert::same(
+			'Foo::render',
+			$routes->match(new Uri\FakeUri(null, '/books/1/nwm'))
+		);
+	}
+
+	public function testMatchMultipleSamePlaceholdersConsecutiveInRow() {
+		$list = new Ini\Fake(['Foo::render' => '/books/{id}/{id}']);
+		$routes = new Routing\HttpRoutes($list);
+		Assert::same(
+			'Foo::render',
+			$routes->match(new Uri\FakeUri(null, '/books/1/5'))
+		);
+	}
 }
 
 

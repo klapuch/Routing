@@ -16,13 +16,18 @@ final class HttpRoutes implements Routes {
 	}
 
 	public function match(Uri\Uri $uri): string {
-		$match = array_search(
-			mb_strtolower($uri->path()),
-			array_map('mb_strtolower', $this->choices->read()),
-			true
+		$matches = array_filter(
+			preg_replace('~{\w+}~', '[\w\d]+', $this->choices->read()),
+			function(string $source) use($uri): bool {
+				return (bool) preg_match(
+					sprintf('~^%s$~iu', $source),
+					$uri->path()
+				);
+			}
 		);
-		if ($match === false)
-			throw new \UnexpectedValueException('HTTP route does not exist');
-		return (string) $match;
+		if ($matches) {
+			return (string) key($matches);
+		}
+		throw new \UnexpectedValueException('HTTP route does not exist');
 	}
 }
