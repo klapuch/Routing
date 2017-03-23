@@ -101,6 +101,15 @@ final class HttpRoutes extends Tester\TestCase {
 		$routes->match(new Uri\FakeUri(null, '/books/{id}'));
 	}
 
+	public function testMatchMultipleDifferentPlaceholders() {
+		$list = new Ini\Fake(['Foo/bar' => '/books/{id}/foo/{key}']);
+		$routes = new Routing\HttpRoutes($list);
+		Assert::same(
+			'Foo/bar',
+			$routes->match(new Uri\FakeUri(null, '/books/1/foo/nwm'))
+		);
+	}
+
 	public function testMatchMultipleDifferentPlaceholdersInRow() {
 		$list = new Ini\Fake(['Foo/bar' => '/books/{id}/{key}']);
 		$routes = new Routing\HttpRoutes($list);
