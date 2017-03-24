@@ -9,14 +9,14 @@ use Klapuch\Uri;
  * Routes suitable for HTTP protocol
  */
 final class HttpRoutes implements Routes {
-	private $choices;
+	private $ini;
 
-	public function __construct(Ini\Ini $choices) {
-		$this->choices = $choices;
+	public function __construct(Ini\Ini $ini) {
+		$this->ini = $ini;
 	}
 
 	public function match(Uri\Uri $uri): Route {
-		$choices = $this->choices->read();
+		$choices = $this->ini->read();
 		$matches = array_filter(
 			preg_replace('~{\w+}~', '[\w\d]+', $choices),
 			function(string $source) use($uri): bool {
