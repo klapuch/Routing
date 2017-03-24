@@ -16,26 +16,41 @@ require __DIR__ . '/../bootstrap.php';
 
 final class HttpRoutes extends Tester\TestCase {
 	public function testExactMatch() {
-		$routes = new Routing\HttpRoutes(new Ini\Fake(['Foo/bar' => '/foo']));
-		Assert::same('Foo/bar', $routes->match(new Uri\FakeUri(null, '/foo')));
+		[$destination, $source] = ['Foo/default', '/foo'];
+		$routes = new Routing\HttpRoutes(new Ini\Fake([$destination => $source]));
+		$uri = new Uri\FakeUri(null, $source);
+		Assert::equal(
+			new Routing\HttpRoute($source, $destination, $uri),
+			$routes->match($uri)
+		);
 	}
 
 	/**
 	 * @throws \UnexpectedValueException HTTP route does not exist
 	 */
 	public function testStrictTypeMatching() {
-		$list = new Ini\Fake(['Foo/bar' => true]);
+		$list = new Ini\Fake(['Foo/default' => true]);
 		(new Routing\HttpRoutes($list))->match(new Uri\FakeUri(null, '/foo'));
 	}
 
 	public function testStringMatchOnNumber() {
-		$routes = new Routing\HttpRoutes(new Ini\Fake(['5' => '/foo']));
-		Assert::same('5', $routes->match(new Uri\FakeUri(null, '/foo')));
+		[$destination, $source] = ['5', '/foo'];
+		$routes = new Routing\HttpRoutes(new Ini\Fake([$destination => $source]));
+		$uri = new Uri\FakeUri(null, $source);
+		Assert::equal(
+			new Routing\HttpRoute($source, $destination, $uri),
+			$routes->match($uri)
+		);
 	}
 
 	public function testAllowingFalseyMatch() {
-		$routes = new Routing\HttpRoutes(new Ini\Fake(['0' => '/foo']));
-		Assert::same('0', $routes->match(new Uri\FakeUri(null, '/foo')));
+		[$destination, $source] = ['0', '/foo'];
+		$routes = new Routing\HttpRoutes(new Ini\Fake([$destination => $source]));
+		$uri = new Uri\FakeUri(null, $source);
+		Assert::equal(
+			new Routing\HttpRoute($source, $destination, $uri),
+			$routes->match($uri)
+		);
 	}
 
 	/**
@@ -46,31 +61,54 @@ final class HttpRoutes extends Tester\TestCase {
 	}
 
 	public function testCaseInsensitiveMatch() {
-		$list = new Ini\Fake(['Foo/bar' => '/foo', 'Bar::render' => '/BaR']);
-		$routes = new Routing\HttpRoutes($list);
-		Assert::same('Foo/bar', $routes->match(new Uri\FakeUri(null, '/FoO')));
-		Assert::same('Bar::render', $routes->match(new Uri\FakeUri(null, '/bar')));
+		$ini = new Ini\Fake(['Foo/default' => '/foo', 'Bar/default' => '/BaR']);
+		$routes = new Routing\HttpRoutes($ini);
+		$fooUri = new Uri\FakeUri(null, '/foo');
+		$barUri = new Uri\FakeUri(null, '/BaR');
+		Assert::equal(
+			new Routing\HttpRoute('/foo', 'Foo/default', $fooUri),
+			$routes->match($fooUri)
+		);
+		Assert::equal(
+			new Routing\HttpRoute('/BaR', 'Bar/default', $barUri),
+			$routes->match($barUri)
+		);
 	}
 
 	public function testMultibyteCaseInsensitiveMatch() {
-		$list = new Ini\Fake(['Foo/bar' => '/foó', 'Bar::render' => '/BaŘ']);
-		$routes = new Routing\HttpRoutes($list);
-		Assert::same('Foo/bar', $routes->match(new Uri\FakeUri(null, '/FoÓ')));
-		Assert::same('Bar::render', $routes->match(new Uri\FakeUri(null, '/bař')));
+		$ini = new Ini\Fake(['Foo/default' => '/foó', 'Bar/default' => '/BaŘ']);
+		$routes = new Routing\HttpRoutes($ini);
+		$fooUri = new Uri\FakeUri(null, '/foó');
+		$barUri = new Uri\FakeUri(null, '/BaŘ');
+		Assert::equal(
+			new Routing\HttpRoute('/foó', 'Foo/default', $fooUri),
+			$routes->match($fooUri)
+		);
+		Assert::equal(
+			new Routing\HttpRoute('/BaŘ', 'Bar/default', $barUri),
+			$routes->match($barUri)
+		);
 	}
 
 	public function testMultiplePossibilitiesWithFirstMatch() {
-		$list = new Ini\Fake(['Foo/bar' => '/foo', 'Foo2::render' => '/foo']);
-		$routes = new Routing\HttpRoutes($list);
-		Assert::same('Foo/bar', $routes->match(new Uri\FakeUri(null, '/foo')));
+		[$destination, $source] = ['Foo/default', '/foo'];
+		$ini = new Ini\Fake([$destination => $source, 'Bar/default' => $source]);
+		$routes = new Routing\HttpRoutes($ini);
+		$uri = new Uri\FakeUri(null, $source);
+		Assert::equal(
+			new Routing\HttpRoute($source, $destination, $uri),
+			$routes->match($uri)
+		);
 	}
 
 	public function testMatchWithSinglePlaceholder() {
-		$list = new Ini\Fake(['Foo/bar' => '/books/{id}']);
-		$routes = new Routing\HttpRoutes($list);
-		Assert::same(
-			'Foo/bar',
-			$routes->match(new Uri\FakeUri(null, '/books/1'))
+		[$destination, $source] = ['Foo/default', '/books/{id}'];
+		$ini = new Ini\Fake([$destination => $source]);
+		$routes = new Routing\HttpRoutes($ini);
+		$uri = new Uri\FakeUri(null, '/books/1');
+		Assert::equal(
+			new Routing\HttpRoute($source, $destination, $uri),
+			$routes->match($uri)
 		);
 	}
 
@@ -78,8 +116,9 @@ final class HttpRoutes extends Tester\TestCase {
 	 * @throws \UnexpectedValueException HTTP route does not exist
 	 */
 	public function testThrowingOnPlaceholderAsNestedParameter() {
-		$list = new Ini\Fake(['Foo/bar' => '/books/{id}']);
-		$routes = new Routing\HttpRoutes($list);
+		[$destination, $source] = ['Foo/default', '/books/{id}'];
+		$ini = new Ini\Fake([$destination => $source]);
+		$routes = new Routing\HttpRoutes($ini);
 		$routes->match(new Uri\FakeUri(null, '/books/foo/bar'));
 	}
 
@@ -87,8 +126,9 @@ final class HttpRoutes extends Tester\TestCase {
 	 * @throws \UnexpectedValueException HTTP route does not exist
 	 */
 	public function testThrowingOnSomePlaceholderMatch() {
-		$list = new Ini\Fake(['Foo/bar' => '/books/{id}']);
-		$routes = new Routing\HttpRoutes($list);
+		[$destination, $source] = ['Foo/default', '/books/{id}'];
+		$ini = new Ini\Fake([$destination => $source]);
+		$routes = new Routing\HttpRoutes($ini);
 		$routes->match(new Uri\FakeUri(null, 'blabla/books/foo'));
 	}
 
@@ -96,35 +136,42 @@ final class HttpRoutes extends Tester\TestCase {
 	 * @throws \UnexpectedValueException HTTP route does not exist
 	 */
 	public function testThrowingOnDirectPlaceholderParameter() {
-		$list = new Ini\Fake(['Foo/bar' => '/books/{id}']);
-		$routes = new Routing\HttpRoutes($list);
-		$routes->match(new Uri\FakeUri(null, '/books/{id}'));
+		[$destination, $source] = ['Foo/default', '/books/{id}'];
+		$ini = new Ini\Fake([$destination => $source]);
+		$routes = new Routing\HttpRoutes($ini);
+		$routes->match(new Uri\FakeUri(null, $source));
 	}
 
 	public function testMatchMultipleDifferentPlaceholders() {
-		$list = new Ini\Fake(['Foo/bar' => '/books/{id}/foo/{key}']);
-		$routes = new Routing\HttpRoutes($list);
-		Assert::same(
-			'Foo/bar',
-			$routes->match(new Uri\FakeUri(null, '/books/1/foo/nwm'))
+		[$destination, $source] = ['Foo/default', '/books/{id}/foo/{key}'];
+		$ini = new Ini\Fake([$destination => $source]);
+		$routes = new Routing\HttpRoutes($ini);
+		$uri = new Uri\FakeUri(null, '/books/1/foo/nwm');
+		Assert::equal(
+			new Routing\HttpRoute($source, $destination, $uri),
+			$routes->match($uri)
 		);
 	}
 
 	public function testMatchMultipleDifferentPlaceholdersInRow() {
-		$list = new Ini\Fake(['Foo/bar' => '/books/{id}/{key}']);
-		$routes = new Routing\HttpRoutes($list);
-		Assert::same(
-			'Foo/bar',
-			$routes->match(new Uri\FakeUri(null, '/books/1/nwm'))
+		[$destination, $source] = ['Foo/default', '/books/{id}/{key}'];
+		$ini = new Ini\Fake([$destination => $source]);
+		$routes = new Routing\HttpRoutes($ini);
+		$uri = new Uri\FakeUri(null, '/books/1/nwm');
+		Assert::equal(
+			new Routing\HttpRoute($source, $destination, $uri),
+			$routes->match($uri)
 		);
 	}
 
 	public function testMatchMultipleSamePlaceholdersInRow() {
-		$list = new Ini\Fake(['Foo/bar' => '/books/{id}/{id}']);
-		$routes = new Routing\HttpRoutes($list);
-		Assert::same(
-			'Foo/bar',
-			$routes->match(new Uri\FakeUri(null, '/books/1/5'))
+		[$destination, $source] = ['Foo/default', '/books/{id}/{id}'];
+		$ini = new Ini\Fake([$destination => $source]);
+		$routes = new Routing\HttpRoutes($ini);
+		$uri = new Uri\FakeUri(null, '/books/1/5');
+		Assert::equal(
+			new Routing\HttpRoute($source, $destination , $uri),
+			$routes->match($uri)
 		);
 	}
 }

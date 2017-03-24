@@ -8,7 +8,7 @@ interface Routes {
 	/**
 	 * The matched route
 	 * @param \Klapuch\Uri\Uri $uri
-	 * @return string
+	 * @return \Klapuch\Routing\Route
 	 */
-	public function match(Uri\Uri $uri): string;
+	public function match(Uri\Uri $uri): Route;
 }

@@ -15,9 +15,10 @@ final class HttpRoutes implements Routes {
 		$this->choices = $choices;
 	}
 
-	public function match(Uri\Uri $uri): string {
+	public function match(Uri\Uri $uri): Route {
+		$choices = $this->choices->read();
 		$matches = array_filter(
-			preg_replace('~{\w+}~', '[\w\d]+', $this->choices->read()),
+			preg_replace('~{\w+}~', '[\w\d]+', $choices),
 			function(string $source) use($uri): bool {
 				return (bool) preg_match(
 					sprintf('~^%s$~iu', $source),
@@ -26,7 +27,11 @@ final class HttpRoutes implements Routes {
 			}
 		);
 		if ($matches) {
-			return (string) key($matches);
+			return new HttpRoute(
+				$choices[key($matches)],
+				(string) key($matches),
+				$uri
+			);
 		}
 		throw new \UnexpectedValueException('HTTP route does not exist');
 	}
