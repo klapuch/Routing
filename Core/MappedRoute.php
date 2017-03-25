@@ -10,17 +10,19 @@ final class MappedRoute implements Route {
 		PATH_SEPARATOR = '/';
 	private $origin;
 	private $namespace;
+	private $suffix;
 
-	public function __construct(Route $origin, string $namespace) {
+	public function __construct(Route $origin, string $namespace, string $suffix = '') {
 		$this->origin = $origin;
 		$this->namespace = $namespace;
+		$this->suffix = $suffix;
 	}
 
 	public function resource(): string {
 		return $this->withNamespace(
 			trim($this->namespace, self::NAMESPACE_SEPARATOR),
 			$this->toClass($this->origin->resource(), $this->origin->action())
-		);
+		) . $this->suffix;
 	}
 
 	public function action(): string {

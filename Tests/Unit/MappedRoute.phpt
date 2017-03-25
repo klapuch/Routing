@@ -39,6 +39,15 @@ final class MappedRoute extends Tester\TestCase {
 			))->resource()
 		);
 	}
+
+	public function testAddingClassSuffix() {
+		Assert::same(
+			'\App\Page\Sign\InPage',
+			(new Routing\MappedRoute(
+				new Routing\FakeRoute('sign', 'in'), 'App\Page', 'Page'
+			))->resource()
+		);
+	}
 }
 
 
