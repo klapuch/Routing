@@ -38,7 +38,7 @@ final class HttpRoute extends Tester\TestCase {
 
 	public function testExtractingMatchedParameters() {
 		Assert::same(
-			['foo', 'cool'],
+			['foo' => 'foo', 'adjective' => 'cool'],
 			(new Routing\HttpRoute(
 				'/books/{foo}/{adjective}',
 				'Foo/bar',
@@ -49,7 +49,7 @@ final class HttpRoute extends Tester\TestCase {
 
 	public function testTypeAwareParameters() {
 		Assert::same(
-			[1, 123456789, '1ab', 'ba1'],
+			['a' => 1, 'b' => 123456789, 'c' => '1ab', 'd' => 'ba1'],
 			(new Routing\HttpRoute(
 				'/books/{a}/{b}/{c}/{d}',
 				'Foo/bar',

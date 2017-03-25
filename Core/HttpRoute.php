@@ -30,13 +30,11 @@ final class HttpRoute implements Route {
 	}
 
 	public function parameters(): array {
-		$parameters = array_values(
-			array_diff(
-				explode(self::DELIMITER, $this->uri->path()),
-				explode(self::DELIMITER, $this->source)
-			)
+		$sources = explode(self::DELIMITER, $this->source);
+		$parameters = array_diff(explode(self::DELIMITER, $this->uri->path()), $sources);
+		return array_combine(
+			str_replace(['{', '}'], '', array_intersect_key($sources, $parameters)),
+			array_map('intval', array_filter($parameters, 'is_numeric')) + $parameters
 		);
-		return array_map('intval', array_filter($parameters, 'is_numeric'))
-			+ $parameters;
 	}
 }
