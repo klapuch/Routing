@@ -8,7 +8,7 @@ use Klapuch\Uri;
  * Direct destination within class name, method and parameters
  */
 final class HttpRoute implements Route {
-	private const DELIMITER = '/';
+	private const SEPARATOR = '/';
 	private const RESOURCE = 0,
 		ACTION = 1;
 	private $source;
@@ -22,16 +22,16 @@ final class HttpRoute implements Route {
 	}
 
 	public function resource(): string {
-		return explode(self::DELIMITER, $this->destination, 2)[self::RESOURCE];
+		return explode(self::SEPARATOR, $this->destination, 2)[self::RESOURCE];
 	}
 
 	public function action(): string {
-		return explode(self::DELIMITER, $this->destination, 2)[self::ACTION];
+		return explode(self::SEPARATOR, $this->destination, 2)[self::ACTION];
 	}
 
 	public function parameters(): array {
-		$sources = explode(self::DELIMITER, $this->source);
-		$parameters = array_diff(explode(self::DELIMITER, $this->uri->path()), $sources);
+		$sources = explode(self::SEPARATOR, $this->source);
+		$parameters = array_diff(explode(self::SEPARATOR, $this->uri->path()), $sources);
 		return array_combine(
 			str_replace(['{', '}'], '', array_intersect_key($sources, $parameters)),
 			array_map('intval', array_filter($parameters, 'is_numeric')) + $parameters
