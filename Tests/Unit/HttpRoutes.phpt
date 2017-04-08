@@ -174,6 +174,27 @@ final class HttpRoutes extends Tester\TestCase {
 			$routes->match($uri)
 		);
 	}
+
+	public function testMatchWithRegex() {
+		[$destination, $source] = ['Foo/default', '/books/{id \d}/{key \w+}'];
+		$ini = new Ini\Fake([$destination => $source]);
+		$routes = new Routing\HttpRoutes($ini);
+		$uri = new Uri\FakeUri(null, '/books/1/bar');
+		Assert::equal(
+			new Routing\HttpRoute($source, $destination, $uri),
+			$routes->match($uri)
+		);
+	}
+
+	/**
+	 * @throws \UnexpectedValueException HTTP route does not exist
+	 */
+	public function testThrowingOnNoRegexMatch() {
+		[$destination, $source] = ['Foo/default', '/books/{id \d}'];
+		$ini = new Ini\Fake([$destination => $source]);
+		$routes = new Routing\HttpRoutes($ini);
+		$routes->match(new Uri\FakeUri(null, '/books/10'));
+	}
 }
 
 
