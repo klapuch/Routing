@@ -33,7 +33,11 @@ final class HttpRoute implements Route {
 		$sources = explode(self::SEPARATOR, $this->source);
 		$parameters = array_diff(explode(self::SEPARATOR, $this->uri->path()), $sources);
 		return array_combine(
-			str_replace(['{', '}'], '', array_intersect_key($sources, $parameters)),
+			preg_replace(
+				'~{|}|\s\S+~',
+				'',
+				array_intersect_key($sources, $parameters)
+			),
 			array_map('intval', array_filter($parameters, 'is_numeric')) + $parameters
 		);
 	}

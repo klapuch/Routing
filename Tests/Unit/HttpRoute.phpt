@@ -57,6 +57,17 @@ final class HttpRoute extends Tester\TestCase {
 			))->parameters()
 		);
 	}
+
+	public function testRemovingRegexParts() {
+		Assert::same(
+			['foo' => 10, 'adjective' => 'cool', 'word' => 'bar'],
+			(new Routing\HttpRoute(
+				'/books/{foo \d+}/{adjective \w+}/{word}',
+				'Foo/bar',
+				new Uri\FakeUri(null, '/books/10/cool/bar')
+			))->parameters()
+		);
+	}
 }
 
 

@@ -18,7 +18,7 @@ final class HttpRoutes implements Routes {
 	public function match(Uri\Uri $uri): Route {
 		$choices = $this->ini->read();
 		$matches = array_filter(
-			preg_replace('~{\w+}~', '[\w\d]+', $choices),
+			$this->patterns($choices),
 			function(string $source) use($uri): bool {
 				return (bool) preg_match(
 					sprintf('~^%s$~iu', $source),
@@ -35,4 +35,42 @@ final class HttpRoutes implements Routes {
 		}
 		throw new \UnexpectedValueException('HTTP route does not exist');
 	}
+
+	/**
+	 * All the variable placeholders replaced by patterns
+	 * @param array $choices
+	 * @return array
+	 */
+	private function patterns(array $choices): array {
+		return array_combine(
+			array_keys($choices),
+			array_map([$this, 'filling'], $choices)
+		);
+	}
+
+	// @codingStandardsIgnoreStart Used by array_map
+	/**
+	 * Filling variable placeholders
+	 * @param string $choice
+	 * @return string
+	 */
+	private function filling(string $choice): string {
+		return implode(
+			'/',
+			array_map([$this, 'pattern'], explode('/', $choice))
+		);
+	}
+
+	/**
+	 * Placeholder replaced by pattern
+	 * @param string $part
+	 * @return string
+	 */
+	private function pattern(string $part): string {
+		return preg_replace(
+			'~{.+}~',
+			rtrim(explode(' ', $part)[1] ?? '[\w\d]+', '}'),
+			$part
+		);
+	} // @codingStandardsIgnoreEnd
 }
