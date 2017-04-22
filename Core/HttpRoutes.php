@@ -11,7 +11,7 @@ use Klapuch\Uri;
 final class HttpRoutes implements Routes {
 	private $ini;
 
-	public function __construct(Ini\Ini $ini) {
+	public function __construct(Ini\Source $ini) {
 		$this->ini = $ini;
 	}
 
