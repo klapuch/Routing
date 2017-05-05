@@ -17,7 +17,8 @@ final class MappedRoute extends Tester\TestCase {
 		Assert::same(
 			'\App\Page\Sign\In',
 			(new Routing\MappedRoute(
-				new Routing\FakeRoute('Sign', 'In'), 'App\Page'
+				new Routing\FakeRoute('Sign', 'In'),
+				'App\Page'
 			))->resource()
 		);
 	}
@@ -26,7 +27,8 @@ final class MappedRoute extends Tester\TestCase {
 		Assert::same(
 			'\App\Page\Sign\In',
 			(new Routing\MappedRoute(
-				new Routing\FakeRoute('Sign', 'in'), '\App\Page\\'
+				new Routing\FakeRoute('Sign', 'in'),
+				'\App\Page\\'
 			))->resource()
 		);
 	}
@@ -35,7 +37,8 @@ final class MappedRoute extends Tester\TestCase {
 		Assert::same(
 			'\App\Page\Sign\In',
 			(new Routing\MappedRoute(
-				new Routing\FakeRoute('sign', 'in'), 'App\Page'
+				new Routing\FakeRoute('sign', 'in'),
+				'App\Page'
 			))->resource()
 		);
 	}
@@ -44,7 +47,9 @@ final class MappedRoute extends Tester\TestCase {
 		Assert::same(
 			'\App\Page\Sign\InPage',
 			(new Routing\MappedRoute(
-				new Routing\FakeRoute('sign', 'in'), 'App\Page', 'Page'
+				new Routing\FakeRoute('sign', 'in'),
+				'App\Page',
+				'Page'
 			))->resource()
 		);
 	}

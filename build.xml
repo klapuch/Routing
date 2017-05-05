@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project name="Project" default="check">
+<project name="Library" default="check">
 
 	<target name="check" depends="lint, phpcpd, phpstan, phpcs, tests, cgi-tests"/>
-	<target name="ci" depends="lint, phpcpd, phpstan, phpcs, tests, cgi-tests, coverage"/>
+	<target name="ci" depends="check, coverage"/>
 
 	<target name="lint">
 		<exec executable="vendor/bin/parallel-lint" logoutput="true" passthru="true" checkreturn="true">
@@ -15,6 +15,8 @@
 
 	<target name="phpcpd">
 		<exec executable="vendor/bin/phpcpd" logoutput="true" passthru="true" checkreturn="true">
+            <arg value="--exclude"/>
+            <arg value="Form"/>
 			<arg path="Core"/>
 		</exec>
 	</target>
@@ -94,7 +96,7 @@
 			<arg value="--coverage"/>
 			<arg value="coverage.xml"/>
 			<arg value="--coverage-src"/>
-			<arg path="Core"/>
+			<arg path="Core/"/>
 		</exec>
 	</target>
 

@@ -170,7 +170,7 @@ final class HttpRoutes extends Tester\TestCase {
 		$routes = new Routing\HttpRoutes($ini);
 		$uri = new Uri\FakeUri(null, '/books/1/5');
 		Assert::equal(
-			new Routing\HttpRoute($source, $destination , $uri),
+			new Routing\HttpRoute($source, $destination, $uri),
 			$routes->match($uri)
 		);
 	}

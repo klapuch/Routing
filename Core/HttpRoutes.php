@@ -19,7 +19,7 @@ final class HttpRoutes implements Routes {
 		$choices = $this->ini->read();
 		$matches = array_filter(
 			$this->patterns($choices),
-			function(string $source) use($uri): bool {
+			function(string $source) use ($uri): bool {
 				return (bool) preg_match(
 					sprintf('~^%s$~iu', $source),
 					$uri->path()
