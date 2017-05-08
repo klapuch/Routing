@@ -26,7 +26,7 @@ final class HttpRoutes extends Tester\TestCase {
 	}
 
 	/**
-	 * @throws \UnexpectedValueException HTTP route does not exist
+	 * @throws \UnexpectedValueException HTTP route for "/foo" does not exist
 	 */
 	public function testStrictTypeMatching() {
 		$list = new Ini\FakeSource(['Foo/default' => true]);
@@ -54,7 +54,7 @@ final class HttpRoutes extends Tester\TestCase {
 	}
 
 	/**
-	 * @throws \UnexpectedValueException HTTP route does not exist
+	 * @throws \UnexpectedValueException HTTP route for "" does not exist
 	 */
 	public function testThrowingOnNoMatch() {
 		(new Routing\HttpRoutes(new Ini\FakeSource([])))->match(new Uri\FakeUri(null, ''));
@@ -113,7 +113,7 @@ final class HttpRoutes extends Tester\TestCase {
 	}
 
 	/**
-	 * @throws \UnexpectedValueException HTTP route does not exist
+	 * @throws \UnexpectedValueException HTTP route for "/books/foo/bar" does not exist
 	 */
 	public function testThrowingOnPlaceholderAsNestedParameter() {
 		[$destination, $source] = ['Foo/default', '/books/{id}'];
@@ -123,7 +123,7 @@ final class HttpRoutes extends Tester\TestCase {
 	}
 
 	/**
-	 * @throws \UnexpectedValueException HTTP route does not exist
+	 * @throws \UnexpectedValueException HTTP route for "blabla/books/foo" does not exist
 	 */
 	public function testThrowingOnSomePlaceholderMatch() {
 		[$destination, $source] = ['Foo/default', '/books/{id}'];
@@ -133,7 +133,7 @@ final class HttpRoutes extends Tester\TestCase {
 	}
 
 	/**
-	 * @throws \UnexpectedValueException HTTP route does not exist
+	 * @throws \UnexpectedValueException HTTP route for "/books/{id}" does not exist
 	 */
 	public function testThrowingOnDirectPlaceholderParameter() {
 		[$destination, $source] = ['Foo/default', '/books/{id}'];
@@ -187,7 +187,7 @@ final class HttpRoutes extends Tester\TestCase {
 	}
 
 	/**
-	 * @throws \UnexpectedValueException HTTP route does not exist
+	 * @throws \UnexpectedValueException HTTP route for "/books/10" does not exist
 	 */
 	public function testThrowingOnNoRegexMatch() {
 		[$destination, $source] = ['Foo/default', '/books/{id \d}'];

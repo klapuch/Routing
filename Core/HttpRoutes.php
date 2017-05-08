@@ -33,7 +33,9 @@ final class HttpRoutes implements Routes {
 				$uri
 			);
 		}
-		throw new \UnexpectedValueException('HTTP route does not exist');
+		throw new \UnexpectedValueException(
+			sprintf('HTTP route for "%s" does not exist', $uri->path())
+		);
 	}
 
 	/**
