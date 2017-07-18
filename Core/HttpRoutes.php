@@ -28,8 +28,8 @@ final class HttpRoutes implements Routes {
 		);
 		if ($matches) {
 			return new HttpRoute(
-				$choices[key($matches)],
 				(string) key($matches),
+				$choices[key($matches)],
 				$uri
 			);
 		}
@@ -46,7 +46,7 @@ final class HttpRoutes implements Routes {
 	private function patterns(array $choices): array {
 		return array_combine(
 			array_keys($choices),
-			array_map([$this, 'filling'], $choices)
+			array_map([$this, 'filling'], array_keys($choices))
 		);
 	}
 

@@ -17,7 +17,7 @@ require __DIR__ . '/../bootstrap.php';
 final class HttpRoutes extends Tester\TestCase {
 	public function testExactMatch() {
 		[$destination, $source] = ['Foo/default', '/foo'];
-		$routes = new Routing\HttpRoutes(new Ini\FakeSource([$destination => $source]));
+		$routes = new Routing\HttpRoutes(new Ini\FakeSource([$source => $destination]));
 		$uri = new Uri\FakeUri(null, $source);
 		Assert::equal(
 			new Routing\HttpRoute($source, $destination, $uri),
@@ -35,7 +35,7 @@ final class HttpRoutes extends Tester\TestCase {
 
 	public function testStringMatchOnNumber() {
 		[$destination, $source] = ['5', '/foo'];
-		$routes = new Routing\HttpRoutes(new Ini\FakeSource([$destination => $source]));
+		$routes = new Routing\HttpRoutes(new Ini\FakeSource([$source => $destination]));
 		$uri = new Uri\FakeUri(null, $source);
 		Assert::equal(
 			new Routing\HttpRoute($source, $destination, $uri),
@@ -45,7 +45,7 @@ final class HttpRoutes extends Tester\TestCase {
 
 	public function testAllowingFalseyMatch() {
 		[$destination, $source] = ['0', '/foo'];
-		$routes = new Routing\HttpRoutes(new Ini\FakeSource([$destination => $source]));
+		$routes = new Routing\HttpRoutes(new Ini\FakeSource([$source => $destination]));
 		$uri = new Uri\FakeUri(null, $source);
 		Assert::equal(
 			new Routing\HttpRoute($source, $destination, $uri),
@@ -61,7 +61,7 @@ final class HttpRoutes extends Tester\TestCase {
 	}
 
 	public function testCaseInsensitiveMatch() {
-		$ini = new Ini\FakeSource(['Foo/default' => '/foo', 'Bar/default' => '/BaR']);
+		$ini = new Ini\FakeSource(['/foo' => 'Foo/default', '/BaR' => 'Bar/default']);
 		$routes = new Routing\HttpRoutes($ini);
 		$fooUri = new Uri\FakeUri(null, '/foo');
 		$barUri = new Uri\FakeUri(null, '/BaR');
@@ -76,7 +76,7 @@ final class HttpRoutes extends Tester\TestCase {
 	}
 
 	public function testMultibyteCaseInsensitiveMatch() {
-		$ini = new Ini\FakeSource(['Foo/default' => '/foó', 'Bar/default' => '/BaŘ']);
+		$ini = new Ini\FakeSource(['/foó' => 'Foo/default', '/BaŘ' => 'Bar/default']);
 		$routes = new Routing\HttpRoutes($ini);
 		$fooUri = new Uri\FakeUri(null, '/foó');
 		$barUri = new Uri\FakeUri(null, '/BaŘ');
@@ -90,9 +90,9 @@ final class HttpRoutes extends Tester\TestCase {
 		);
 	}
 
-	public function testMultiplePossibilitiesWithFirstMatch() {
-		[$destination, $source] = ['Foo/default', '/foo'];
-		$ini = new Ini\FakeSource([$destination => $source, 'Bar/default' => $source]);
+	public function testMultiplePossibilitiesWithLastMatch() {
+		[$destination, $source] = ['Bar/default', '/foo'];
+		$ini = new Ini\FakeSource([$source => 'Foo/default', $source => $destination]);
 		$routes = new Routing\HttpRoutes($ini);
 		$uri = new Uri\FakeUri(null, $source);
 		Assert::equal(
@@ -103,7 +103,7 @@ final class HttpRoutes extends Tester\TestCase {
 
 	public function testMatchWithSinglePlaceholder() {
 		[$destination, $source] = ['Foo/default', '/books/{id}'];
-		$ini = new Ini\FakeSource([$destination => $source]);
+		$ini = new Ini\FakeSource([$source => $destination]);
 		$routes = new Routing\HttpRoutes($ini);
 		$uri = new Uri\FakeUri(null, '/books/1');
 		Assert::equal(
@@ -117,7 +117,7 @@ final class HttpRoutes extends Tester\TestCase {
 	 */
 	public function testThrowingOnPlaceholderAsNestedParameter() {
 		[$destination, $source] = ['Foo/default', '/books/{id}'];
-		$ini = new Ini\FakeSource([$destination => $source]);
+		$ini = new Ini\FakeSource([$source => $destination]);
 		$routes = new Routing\HttpRoutes($ini);
 		$routes->match(new Uri\FakeUri(null, '/books/foo/bar'));
 	}
@@ -127,7 +127,7 @@ final class HttpRoutes extends Tester\TestCase {
 	 */
 	public function testThrowingOnSomePlaceholderMatch() {
 		[$destination, $source] = ['Foo/default', '/books/{id}'];
-		$ini = new Ini\FakeSource([$destination => $source]);
+		$ini = new Ini\FakeSource([$source => $destination]);
 		$routes = new Routing\HttpRoutes($ini);
 		$routes->match(new Uri\FakeUri(null, 'blabla/books/foo'));
 	}
@@ -137,14 +137,14 @@ final class HttpRoutes extends Tester\TestCase {
 	 */
 	public function testThrowingOnDirectPlaceholderParameter() {
 		[$destination, $source] = ['Foo/default', '/books/{id}'];
-		$ini = new Ini\FakeSource([$destination => $source]);
+		$ini = new Ini\FakeSource([$source => $destination]);
 		$routes = new Routing\HttpRoutes($ini);
 		$routes->match(new Uri\FakeUri(null, $source));
 	}
 
 	public function testMatchMultipleDifferentPlaceholders() {
 		[$destination, $source] = ['Foo/default', '/books/{id}/foo/{key}'];
-		$ini = new Ini\FakeSource([$destination => $source]);
+		$ini = new Ini\FakeSource([$source => $destination]);
 		$routes = new Routing\HttpRoutes($ini);
 		$uri = new Uri\FakeUri(null, '/books/1/foo/nwm');
 		Assert::equal(
@@ -155,7 +155,7 @@ final class HttpRoutes extends Tester\TestCase {
 
 	public function testMatchMultipleDifferentPlaceholdersInRow() {
 		[$destination, $source] = ['Foo/default', '/books/{id}/{key}'];
-		$ini = new Ini\FakeSource([$destination => $source]);
+		$ini = new Ini\FakeSource([$source => $destination]);
 		$routes = new Routing\HttpRoutes($ini);
 		$uri = new Uri\FakeUri(null, '/books/1/nwm');
 		Assert::equal(
@@ -166,7 +166,7 @@ final class HttpRoutes extends Tester\TestCase {
 
 	public function testMatchMultipleSamePlaceholdersInRow() {
 		[$destination, $source] = ['Foo/default', '/books/{id}/{id}'];
-		$ini = new Ini\FakeSource([$destination => $source]);
+		$ini = new Ini\FakeSource([$source => $destination]);
 		$routes = new Routing\HttpRoutes($ini);
 		$uri = new Uri\FakeUri(null, '/books/1/5');
 		Assert::equal(
@@ -177,7 +177,7 @@ final class HttpRoutes extends Tester\TestCase {
 
 	public function testMatchWithRegex() {
 		[$destination, $source] = ['Foo/default', '/books/{id \d}/{key \w+}'];
-		$ini = new Ini\FakeSource([$destination => $source]);
+		$ini = new Ini\FakeSource([$source => $destination]);
 		$routes = new Routing\HttpRoutes($ini);
 		$uri = new Uri\FakeUri(null, '/books/1/bar');
 		Assert::equal(
@@ -191,7 +191,7 @@ final class HttpRoutes extends Tester\TestCase {
 	 */
 	public function testThrowingOnNoRegexMatch() {
 		[$destination, $source] = ['Foo/default', '/books/{id \d}'];
-		$ini = new Ini\FakeSource([$destination => $source]);
+		$ini = new Ini\FakeSource([$source => $destination]);
 		$routes = new Routing\HttpRoutes($ini);
 		$routes->match(new Uri\FakeUri(null, '/books/10'));
 	}
