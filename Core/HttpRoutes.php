@@ -2,23 +2,21 @@
 declare(strict_types = 1);
 namespace Klapuch\Routing;
 
-use Klapuch\Ini;
 use Klapuch\Uri;
 
 /**
  * Routes suitable for HTTP protocol
  */
 final class HttpRoutes implements Routes {
-	private $ini;
+	private $choices;
 
-	public function __construct(Ini\Source $ini) {
-		$this->ini = $ini;
+	public function __construct(array $choices) {
+		$this->choices = $choices;
 	}
 
 	public function match(Uri\Uri $uri): Route {
-		$choices = $this->ini->read();
 		$matches = array_filter(
-			$this->patterns($choices),
+			$this->patterns($this->choices),
 			function(string $source) use ($uri): bool {
 				return (bool) preg_match(
 					sprintf('~^%s$~iu', $source),
@@ -29,7 +27,7 @@ final class HttpRoutes implements Routes {
 		if ($matches) {
 			return new HttpRoute(
 				(string) key($matches),
-				$choices[key($matches)],
+				$this->choices[key($matches)],
 				$uri
 			);
 		}
