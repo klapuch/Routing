@@ -47,6 +47,9 @@ final class HttpRoutes implements Routes {
 		);
 	}
 
+	/**
+	 * Applied decoded shortcuts
+	 */
 	private function withShortcuts(string $source): string
 	{
 		return str_replace(
@@ -56,6 +59,9 @@ final class HttpRoutes implements Routes {
 		);
 	}
 
+	/**
+	 * Applied decoded methods
+	 */
 	private function withMethods(string $source): string
 	{
 		return preg_replace('~\s\[\w+\]$~', '', $source);
