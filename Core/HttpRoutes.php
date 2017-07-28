@@ -28,7 +28,7 @@ final class HttpRoutes implements Routes {
 				return (bool) preg_match(
 					sprintf(
 						'~^%s(\s\[%s\])?$~iu',
-						$this->withShortcuts(preg_replace('~\s\[\w+\]$~', '', $source)),
+						$this->withShortcuts($this->withMethods($source)),
 						$this->method
 					),
 					$uri->path()
@@ -54,6 +54,11 @@ final class HttpRoutes implements Routes {
 			self::SHORTCUTS,
 			$source
 		);
+	}
+
+	private function withMethods(string $source): string
+	{
+		return preg_replace('~\s\[\w+\]$~', '', $source);
 	}
 
 	/**
