@@ -26,7 +26,7 @@ final class HttpRoute implements Route {
 	}
 
 	public function action(): string {
-		return explode(self::SEPARATOR, $this->destination, 2)[self::ACTION];
+		return explode(self::SEPARATOR, $this->destination, 2)[self::ACTION] ?? '';
 	}
 
 	public function parameters(): array {

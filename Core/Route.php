@@ -10,7 +10,7 @@ interface Route {
 	public function resource(): string;
 
 	/**
-	 * The action e.g. buy, read, chat
+	 * The action e.g. buy, read, chat, or GET, POST, ...
 	 * @return string
 	 */
 	public function action(): string;

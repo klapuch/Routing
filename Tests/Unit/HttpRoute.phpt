@@ -36,6 +36,17 @@ final class HttpRoute extends Tester\TestCase {
 		);
 	}
 
+	public function testNoAvailableActionWithEmptyOutcome() {
+		Assert::same(
+			'',
+			(new Routing\HttpRoute(
+				'foo/',
+				'Foo',
+				new Uri\FakeUri()
+			))->action()
+		);
+	}
+
 	public function testExtractingMatchedParameters() {
 		Assert::same(
 			['foo' => 'foo', 'adjective' => 'cool'],

@@ -9,9 +9,11 @@ use Klapuch\Uri;
  */
 final class HttpRoutes implements Routes {
 	private $choices;
+	private $method;
 
-	public function __construct(array $choices) {
+	public function __construct(array $choices, string $method) {
 		$this->choices = $choices;
+		$this->method = $method;
 	}
 
 	public function match(Uri\Uri $uri): Route {
@@ -19,7 +21,11 @@ final class HttpRoutes implements Routes {
 			$this->patterns($this->choices),
 			function(string $source) use ($uri): bool {
 				return (bool) preg_match(
-					sprintf('~^%s$~iu', $source),
+					sprintf(
+						'~^%s(\s\[%s\])?$~iu',
+						preg_replace('~\s\[\w+\]$~', '', $source),
+						$this->method
+					),
 					$uri->path()
 				);
 			}
