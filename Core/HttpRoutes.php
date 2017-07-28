@@ -8,6 +8,11 @@ use Klapuch\Uri;
  * Routes suitable for HTTP protocol
  */
 final class HttpRoutes implements Routes {
+	private const SHORTCUTS = [
+		':int' => '\d+',
+		':id' => '[1-9][0-9]*',
+		':string' => '\w*\d*',
+	];
 	private $choices;
 	private $method;
 
@@ -23,7 +28,7 @@ final class HttpRoutes implements Routes {
 				return (bool) preg_match(
 					sprintf(
 						'~^%s(\s\[%s\])?$~iu',
-						preg_replace('~\s\[\w+\]$~', '', $source),
+						$this->withShortcuts(preg_replace('~\s\[\w+\]$~', '', $source)),
 						$this->method
 					),
 					$uri->path()
@@ -39,6 +44,15 @@ final class HttpRoutes implements Routes {
 		}
 		throw new \UnexpectedValueException(
 			sprintf('HTTP route for "%s" does not exist', $uri->path())
+		);
+	}
+
+	private function withShortcuts(string $source): string
+	{
+		return str_replace(
+			array_keys(self::SHORTCUTS),
+			self::SHORTCUTS,
+			$source
 		);
 	}
 

@@ -224,6 +224,70 @@ final class HttpRoutes extends Tester\TestCase {
 			))->match(new Uri\FakeUri(null, $source));
 		});
 	}
+
+	public function testShortcutForInt() {
+		[$destination, $source] = ['Foo/default', '/books/{number :int}'];
+		Assert::noError(function() use ($destination, $source) {
+			(new Routing\HttpRoutes(
+				[$source => $destination],
+				'GET'
+			))->match(new Uri\FakeUri(null, '/books/123'));
+		});
+		Assert::exception(function() use ($destination, $source) {
+			(new Routing\HttpRoutes(
+				[$source => $destination],
+				'GET'
+			))->match(new Uri\FakeUri(null, '/books/a'));
+		}, \UnexpectedValueException::class);
+	}
+
+	public function testShortcutForId() {
+		[$destination, $source] = ['Foo/default', '/books/{id :id}'];
+		Assert::noError(function() use ($destination, $source) {
+			(new Routing\HttpRoutes(
+				[$source => $destination],
+				'GET'
+			))->match(new Uri\FakeUri(null, '/books/123'));
+		});
+		Assert::exception(function() use ($destination, $source) {
+			(new Routing\HttpRoutes(
+				[$source => $destination],
+				'GET'
+			))->match(new Uri\FakeUri(null, '/books/0'));
+		}, \UnexpectedValueException::class);
+	}
+
+	/**
+	 * @dataProvider passingStringShortcuts
+	 */
+	public function testPassingShortcutForString(string $name) {
+		[$destination, $source] = ['Foo/default', '/books/{name :string}'];
+		Assert::noError(function() use ($destination, $source, $name) {
+			(new Routing\HttpRoutes(
+				[$source => $destination],
+				'GET'
+			))->match(new Uri\FakeUri(null, sprintf('/books/%s', $name)));
+		});
+	}
+
+	public function testThrowingOnStringShortcut() {
+		[$destination, $source] = ['Foo/default', '/books/{name :string}'];
+		Assert::exception(function() use ($destination, $source) {
+			(new Routing\HttpRoutes(
+				[$source => $destination],
+				'GET'
+			))->match(new Uri\FakeUri(null, '/books/-'));
+		}, \UnexpectedValueException::class);
+	}
+
+	protected function passingStringShortcuts() {
+		return [
+			['abc123'],
+			['123abc'],
+			['abc'],
+			['123'],
+		];
+	}
 }
 
 
