@@ -27,11 +27,10 @@ final class HttpRoutes implements Routes {
 			function(string $source) use ($uri): bool {
 				return (bool) preg_match(
 					sprintf(
-						'~^%s(\s\[%s\])?$~iu',
-						$this->withShortcuts($this->withMethods($source)),
-						$this->method
+						'~^%s$~iu',
+						$this->withShortcuts($this->withMethod($source))
 					),
-					$uri->path()
+					$this->path($uri, $this->method)
 				);
 			}
 		);
@@ -43,12 +42,14 @@ final class HttpRoutes implements Routes {
 			);
 		}
 		throw new \UnexpectedValueException(
-			sprintf('HTTP route for "%s" does not exist', $uri->path())
+			sprintf('HTTP route for "%s" does not exist', $this->path($uri, $this->method))
 		);
 	}
 
 	/**
 	 * Applied decoded shortcuts
+	 * @param string $source
+	 * @return string
 	 */
 	private function withShortcuts(string $source): string
 	{
@@ -60,11 +61,34 @@ final class HttpRoutes implements Routes {
 	}
 
 	/**
-	 * Applied decoded methods
+	 * Applied decoded method
+	 * @param string $source
+	 * @return string
 	 */
-	private function withMethods(string $source): string
+	private function withMethod(string $source): string
 	{
-		return preg_replace('~\s\[\w+\]$~', '', $source);
+		static $replacement = '(\s\[(%s)\])';
+		$modification = preg_replace(
+			'~\s\[(\w+)\]$~',
+			sprintf($replacement, '$1'),
+			$source,
+			-1,
+			$matches
+		);
+		if ($matches === 0)
+			return $source . sprintf($replacement, $this->method);
+		return $modification;
+	}
+
+	/**
+	 * Path within method
+	 * @param \Klapuch\Uri\Uri $uri
+	 * @param string $method
+	 * @return string
+	 */
+	private function path(Uri\Uri $uri, string $method): string
+	{
+		return sprintf('%s [%s]', $uri->path(), $method);
 	}
 
 	/**

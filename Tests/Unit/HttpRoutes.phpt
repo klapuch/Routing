@@ -25,7 +25,7 @@ final class HttpRoutes extends Tester\TestCase {
 	}
 
 	/**
-	 * @throws \UnexpectedValueException HTTP route for "/foo" does not exist
+	 * @throws \UnexpectedValueException HTTP route for "/foo [GET]" does not exist
 	 */
 	public function testStrictTypeMatching() {
 		(new Routing\HttpRoutes(['Foo/default' => true], 'GET'))->match(new Uri\FakeUri(null, '/foo'));
@@ -52,7 +52,7 @@ final class HttpRoutes extends Tester\TestCase {
 	}
 
 	/**
-	 * @throws \UnexpectedValueException HTTP route for "" does not exist
+	 * @throws \UnexpectedValueException HTTP route for " [GET]" does not exist
 	 */
 	public function testThrowingOnNoMatch() {
 		(new Routing\HttpRoutes([], 'GET'))->match(new Uri\FakeUri(null, ''));
@@ -107,7 +107,7 @@ final class HttpRoutes extends Tester\TestCase {
 	}
 
 	/**
-	 * @throws \UnexpectedValueException HTTP route for "/books/foo/bar" does not exist
+	 * @throws \UnexpectedValueException HTTP route for "/books/foo/bar [GET]" does not exist
 	 */
 	public function testThrowingOnPlaceholderAsNestedParameter() {
 		[$destination, $source] = ['Foo/default', '/books/{id}'];
@@ -116,7 +116,7 @@ final class HttpRoutes extends Tester\TestCase {
 	}
 
 	/**
-	 * @throws \UnexpectedValueException HTTP route for "blabla/books/foo" does not exist
+	 * @throws \UnexpectedValueException HTTP route for "blabla/books/foo [GET]" does not exist
 	 */
 	public function testThrowingOnSomePlaceholderMatch() {
 		[$destination, $source] = ['Foo/default', '/books/{id}'];
@@ -125,7 +125,7 @@ final class HttpRoutes extends Tester\TestCase {
 	}
 
 	/**
-	 * @throws \UnexpectedValueException HTTP route for "/books/{id}" does not exist
+	 * @throws \UnexpectedValueException HTTP route for "/books/{id} [GET]" does not exist
 	 */
 	public function testThrowingOnDirectPlaceholderParameter() {
 		[$destination, $source] = ['Foo/default', '/books/{id}'];
@@ -174,7 +174,7 @@ final class HttpRoutes extends Tester\TestCase {
 	}
 
 	/**
-	 * @throws \UnexpectedValueException HTTP route for "/books/10" does not exist
+	 * @throws \UnexpectedValueException HTTP route for "/books/10 [GET]" does not exist
 	 */
 	public function testThrowingOnNoRegexMatch() {
 		[$destination, $source] = ['Foo/default', '/books/{id \d}'];
@@ -185,7 +185,7 @@ final class HttpRoutes extends Tester\TestCase {
 	public function testMatchingWithinExactMethod() {
 		[$destination, $source] = ['Foo/default', '/foo [GET]'];
 		$routes = new Routing\HttpRoutes([$source => $destination], 'GET');
-		$uri = new Uri\FakeUri(null, $source);
+		$uri = new Uri\FakeUri(null, '/foo');
 		Assert::equal(
 			new Routing\HttpRoute($source, $destination, $uri),
 			$routes->match($uri)
@@ -195,7 +195,7 @@ final class HttpRoutes extends Tester\TestCase {
 	public function testMatchingWithinNonConsistentCaseMethod() {
 		[$destination, $source] = ['Foo/default', '/foo [gEt]'];
 		$routes = new Routing\HttpRoutes([$source => $destination], 'GET');
-		$uri = new Uri\FakeUri(null, $source);
+		$uri = new Uri\FakeUri(null, '/foo');
 		Assert::equal(
 			new Routing\HttpRoute($source, $destination, $uri),
 			$routes->match($uri)
@@ -203,12 +203,12 @@ final class HttpRoutes extends Tester\TestCase {
 	}
 
 	/**
-	 * @throws \UnexpectedValueException HTTP route for "/foo [PATCH]" does not exist
+	 * @throws \UnexpectedValueException HTTP route for "/foo [POST]" does not exist
 	 */
 	public function testThrowingOnNotMatchingMethod() {
 		[$destination, $source] = ['Foo/default', '/foo [PATCH]'];
 		$routes = new Routing\HttpRoutes([$source => $destination], 'POST');
-		$uri = new Uri\FakeUri(null, $source);
+		$uri = new Uri\FakeUri(null, '/foo');
 		Assert::equal(
 			new Routing\HttpRoute($source, $destination, $uri),
 			$routes->match($uri)
@@ -278,6 +278,21 @@ final class HttpRoutes extends Tester\TestCase {
 				'GET'
 			))->match(new Uri\FakeUri(null, '/books/-'));
 		}, \UnexpectedValueException::class);
+	}
+
+	public function testMultipleUrlPossibilitiesMatchingSingleMethod() {
+		$routes = new Routing\HttpRoutes(
+			[
+				'/foo [GET]' => 'Foo/default',
+				'/foo [POST]' => 'Foo/post',
+			],
+			'POST'
+		);
+		$uri = new Uri\FakeUri(null, '/foo');
+		Assert::equal(
+			new Routing\HttpRoute('/foo [POST]', 'Foo/post', $uri),
+			$routes->match($uri)
+		);
 	}
 
 	protected function passingStringShortcuts() {
