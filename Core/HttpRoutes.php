@@ -28,7 +28,7 @@ final class HttpRoutes implements Routes {
 				return (bool) preg_match(
 					sprintf(
 						'~^%s$~iu',
-						$this->withShortcuts($this->withMethod($source))
+						$this->withShortcuts($this->withMethod($source, $this->method))
 					),
 					$this->path($uri, $this->method)
 				);
@@ -63,9 +63,10 @@ final class HttpRoutes implements Routes {
 	/**
 	 * Applied decoded method
 	 * @param string $source
+	 * @param string $method
 	 * @return string
 	 */
-	private function withMethod(string $source): string
+	private function withMethod(string $source, string $method): string
 	{
 		static $replacement = '(\s\[(%s)\])';
 		$modification = preg_replace(
@@ -76,7 +77,7 @@ final class HttpRoutes implements Routes {
 			$matches
 		);
 		if ($matches === 0)
-			return $source . sprintf($replacement, $this->method);
+			return $source . sprintf($replacement, $method);
 		return $modification;
 	}
 
