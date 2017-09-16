@@ -295,6 +295,16 @@ final class HttpRoutes extends Tester\TestCase {
 		);
 	}
 
+	public function testFirstAsParameter() {
+		[$destination, $source] = ['Foo/default', '/{name :string}'];
+		$routes = new Routing\HttpRoutes([$source => $destination], 'GET');
+		$uri = new Uri\FakeUri(null, '/foo');
+		Assert::equal(
+			new Routing\HttpRoute($source, $destination, $uri),
+			$routes->match($uri)
+		);
+	}
+
 	protected function passingStringShortcuts() {
 		return [
 			['abc123'],
