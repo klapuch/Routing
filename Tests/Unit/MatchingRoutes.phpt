@@ -25,7 +25,7 @@ final class MatchingRoutes extends Tester\TestCase {
 	}
 
 	/**
-	 * @throws \UnexpectedValueException /foo/bar is not matching to any listed routes as GET method
+	 * @throws \UnexpectedValueException /foo/bar as GET method is not matching to any listed routes
 	 */
 	public function testThrowingOnNothingToMatch() {
 		(new Routing\MatchingRoutes(
