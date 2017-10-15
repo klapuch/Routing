@@ -18,17 +18,19 @@ final class MatchingRoutes extends Tester\TestCase {
 		Assert::same(
 			['a' => 'b'],
 			(new Routing\MatchingRoutes(
-				new Routing\FakeRoutes(['a' => 'b'])
+				new Routing\FakeRoutes(['a' => 'b']),
+				'GET'
 			))->matches(new Uri\FakeUri())
 		);
 	}
 
 	/**
-	 * @throws \UnexpectedValueException /foo/bar is not matching to any listed routes
+	 * @throws \UnexpectedValueException /foo/bar is not matching to any listed routes as GET method
 	 */
 	public function testThrowingOnNothingToMatch() {
 		(new Routing\MatchingRoutes(
-			new Routing\FakeRoutes([])
+			new Routing\FakeRoutes([]),
+			'get'
 		))->matches(new Uri\FakeUri(null, '/foo/bar'));
 	}
 }
