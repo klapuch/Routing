@@ -18,9 +18,7 @@ final class MatchingRoutes extends Tester\TestCase {
 		Assert::same(
 			['a' => 'b'],
 			(new Routing\MatchingRoutes(
-				new Routing\FakeRoutes(
-					['a' => 'b']
-				)
+				new Routing\FakeRoutes(['a' => 'b'])
 			))->matches(new Uri\FakeUri())
 		);
 	}
