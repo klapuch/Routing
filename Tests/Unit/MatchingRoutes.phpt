@@ -19,8 +19,9 @@ final class MatchingRoutes extends Tester\TestCase {
 			['a' => 'b'],
 			(new Routing\MatchingRoutes(
 				new Routing\FakeRoutes(['a' => 'b']),
+				new Uri\FakeUri(),
 				'GET'
-			))->matches(new Uri\FakeUri())
+			))->matches()
 		);
 	}
 
@@ -30,8 +31,9 @@ final class MatchingRoutes extends Tester\TestCase {
 	public function testThrowingOnNothingToMatch() {
 		(new Routing\MatchingRoutes(
 			new Routing\FakeRoutes([]),
+			new Uri\FakeUri(null, '/foo/bar'),
 			'get'
-		))->matches(new Uri\FakeUri(null, '/foo/bar'));
+		))->matches();
 	}
 }
 

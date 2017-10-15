@@ -2,8 +2,6 @@
 declare(strict_types = 1);
 namespace Klapuch\Routing;
 
-use Klapuch\Uri;
-
 /**
  * Fake
  */
@@ -14,7 +12,7 @@ final class FakeRoutes implements Routes {
 		$this->routes = $routes;
 	}
 
-	public function matches(Uri\Uri $uri): array {
+	public function matches(): array {
 		return $this->routes;
 	}
 }

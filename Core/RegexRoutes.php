@@ -9,28 +9,30 @@ use Klapuch\Uri;
  */
 final class RegexRoutes implements Routes {
 	private $origin;
+	private $uri;
 
-	public function __construct(Routes $origin) {
+	public function __construct(Routes $origin, Uri\Uri $uri) {
 		$this->origin = $origin;
+		$this->uri = $uri;
 	}
 
-	public function matches(Uri\Uri $uri): array {
+	public function matches(): array {
 		$matches = array_filter(
-			$this->patterns($this->origin->matches($uri)),
-			function(string $source) use ($uri): bool {
+			$this->patterns($this->origin->matches()),
+			function(string $source): bool {
 				return (bool) preg_match(
 					sprintf('~^%s$~i', strtok($source, ' ')),
-					$uri->path()
+					$this->uri->path()
 				);
 			},
 			ARRAY_FILTER_USE_KEY
 		);
 		return array_intersect_key(
-			$this->origin->matches($uri),
+			$this->origin->matches(),
 			array_flip(
 				array_filter(
 					array_filter(
-						array_keys($this->origin->matches($uri)),
+						array_keys($this->origin->matches()),
 						function(string $match) use ($matches): bool {
 							return array_search($match, $matches) !== false;
 						}

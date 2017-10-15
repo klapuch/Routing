@@ -2,8 +2,6 @@
 declare(strict_types = 1);
 namespace Klapuch\Routing;
 
-use Klapuch\Uri;
-
 /**
  * Routes by HTTP method
  */
@@ -16,13 +14,13 @@ final class HttpMethodRoutes implements Routes {
 		$this->method = $method;
 	}
 
-	public function matches(Uri\Uri $uri): array {
+	public function matches(): array {
 		return array_intersect_key(
-			$this->origin->matches($uri),
+			$this->origin->matches(),
 			array_flip(
 				preg_grep(
 					sprintf('~\[%s\]$~i', $this->method),
-					array_keys($this->origin->matches($uri))
+					array_keys($this->origin->matches())
 				)
 			)
 		);

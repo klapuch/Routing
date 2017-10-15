@@ -7,7 +7,6 @@ declare(strict_types = 1);
 namespace Klapuch\Routing\Unit;
 
 use Klapuch\Routing;
-use Klapuch\Uri;
 use Tester;
 use Tester\Assert;
 
@@ -19,7 +18,7 @@ final class ShortcutRoutes extends Tester\TestCase {
 			['foo/{name \d+} [GET]' => 'a'],
 			(new Routing\ShortcutRoutes(
 				new Routing\FakeRoutes(['foo/{name :int} [GET]' => 'a'])
-			))->matches(new Uri\FakeUri())
+			))->matches()
 		);
 	}
 
@@ -28,7 +27,7 @@ final class ShortcutRoutes extends Tester\TestCase {
 			['foo/{name [1-9][0-9]*} [GET]' => 'a'],
 			(new Routing\ShortcutRoutes(
 				new Routing\FakeRoutes(['foo/{name :id} [GET]' => 'a'])
-			))->matches(new Uri\FakeUri())
+			))->matches()
 		);
 	}
 
@@ -37,7 +36,7 @@ final class ShortcutRoutes extends Tester\TestCase {
 			['foo/{name \w*\d*} [GET]' => 'a'],
 			(new Routing\ShortcutRoutes(
 				new Routing\FakeRoutes(['foo/{name :string} [GET]' => 'a'])
-			))->matches(new Uri\FakeUri())
+			))->matches()
 		);
 	}
 
@@ -54,7 +53,7 @@ final class ShortcutRoutes extends Tester\TestCase {
 						'foo/{name :string} [GET]' => 'b',
 					]
 				)
-			))->matches(new Uri\FakeUri())
+			))->matches()
 		);
 	}
 }

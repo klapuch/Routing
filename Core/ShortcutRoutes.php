@@ -2,8 +2,6 @@
 declare(strict_types = 1);
 namespace Klapuch\Routing;
 
-use Klapuch\Uri;
-
 /**
  * Shortcut rules for routes
  */
@@ -19,8 +17,8 @@ final class ShortcutRoutes implements Routes {
 		$this->origin = $origin;
 	}
 
-	public function matches(Uri\Uri $uri): array {
-		return $this->replacements($this->origin->matches($uri));
+	public function matches(): array {
+		return $this->replacements($this->origin->matches());
 	}
 
 	private function replacements(array $matches): array {

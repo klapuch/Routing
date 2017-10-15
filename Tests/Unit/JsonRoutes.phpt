@@ -7,7 +7,6 @@ declare(strict_types = 1);
 namespace Klapuch\Routing\Unit;
 
 use Klapuch\Routing;
-use Klapuch\Uri;
 use Tester;
 use Tester\Assert;
 
@@ -31,7 +30,7 @@ final class JsonRoutes extends Tester\TestCase {
 						)
 					)
 				)
-			))->matches(new Uri\FakeUri())
+			))->matches()
 		);
 	}
 
@@ -41,7 +40,7 @@ final class JsonRoutes extends Tester\TestCase {
 	public function testThrowingOnLoadingUnknownFile() {
 		(new Routing\JsonRoutes(
 			new \SplFileInfo('/foo/bar.json')
-		))->matches(new Uri\FakeUri());
+		))->matches();
 	}
 }
 

@@ -29,7 +29,7 @@ final class MappedRoutes extends Tester\TestCase {
 					new Uri\FakeUri()
 				);
 			}
-		))->matches(new Uri\FakeUri());
+		))->matches();
 		Assert::equal(
 			[
 				'foo/{name :int} [GET]' => new Routing\HttpRoute('foo/{name :int} [GET]', 'a', new Uri\FakeUri()),

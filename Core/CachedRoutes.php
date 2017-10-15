@@ -2,8 +2,6 @@
 declare(strict_types = 1);
 namespace Klapuch\Routing;
 
-use Klapuch\Uri;
-
 /**
  * Cached
  */
@@ -15,9 +13,9 @@ final class CachedRoutes implements Routes {
 		$this->origin = $origin;
 	}
 
-	public function matches(Uri\Uri $uri): array {
+	public function matches(): array {
 		if ($this->matches === null)
-			$this->matches = $this->origin->matches($uri);
+			$this->matches = $this->origin->matches();
 		return $this->matches;
 	}
 }

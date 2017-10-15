@@ -8,7 +8,6 @@ namespace Klapuch\Routing\Unit;
 
 use Klapuch\Routing;
 use Klapuch\Routing\TestCase;
-use Klapuch\Uri;
 use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
@@ -18,7 +17,7 @@ final class CachedRoutes extends TestCase\Mockery {
 		$origin = $this->mock(Routing\Routes::class);
 		$origin->shouldReceive('matches')->once();
 		$routes = new Routing\CachedRoutes($origin);
-		Assert::equal($routes->matches(new Uri\FakeUri()), $routes->matches(new Uri\FakeUri()));
+		Assert::equal($routes->matches(), $routes->matches());
 	}
 }
 

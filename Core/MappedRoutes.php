@@ -2,8 +2,6 @@
 declare(strict_types = 1);
 namespace Klapuch\Routing;
 
-use Klapuch\Uri;
-
 /**
  * Routes mapped to arbitrary Route class
  */
@@ -16,17 +14,17 @@ final class MappedRoutes implements Routes {
 		$this->map = $map;
 	}
 
-	public function matches(Uri\Uri $uri): array {
+	public function matches(): array {
 		return array_map(
 			$this->map,
 			array_combine(
-				array_keys($this->origin->matches($uri)),
+				array_keys($this->origin->matches()),
 				array_map(
 					function($destination, $source): array {
 						return [$source => $destination];
 					},
-					$this->origin->matches($uri),
-					array_keys($this->origin->matches($uri))
+					$this->origin->matches(),
+					array_keys($this->origin->matches())
 				)
 			)
 		);

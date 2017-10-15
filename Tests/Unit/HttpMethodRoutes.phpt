@@ -7,7 +7,6 @@ declare(strict_types = 1);
 namespace Klapuch\Routing\Unit;
 
 use Klapuch\Routing;
-use Klapuch\Uri;
 use Tester;
 use Tester\Assert;
 
@@ -25,7 +24,7 @@ final class HttpMethodRoutes extends Tester\TestCase {
 					]
 				),
 				'GET'
-			))->matches(new Uri\FakeUri())
+			))->matches()
 		);
 	}
 
@@ -35,14 +34,14 @@ final class HttpMethodRoutes extends Tester\TestCase {
 			(new Routing\HttpMethodRoutes(
 				new Routing\FakeRoutes(['foo [post]' => 'a']),
 				'POST'
-			))->matches(new Uri\FakeUri())
+			))->matches()
 		);
 		Assert::same(
 			['foo [POST]' => 'a'],
 			(new Routing\HttpMethodRoutes(
 				new Routing\FakeRoutes(['foo [POST]' => 'a']),
 				'post'
-			))->matches(new Uri\FakeUri())
+			))->matches()
 		);
 	}
 
@@ -52,7 +51,7 @@ final class HttpMethodRoutes extends Tester\TestCase {
 			(new Routing\HttpMethodRoutes(
 				new Routing\FakeRoutes(['foo [GET]' => 'a']),
 				'POST'
-			))->matches(new Uri\FakeUri())
+			))->matches()
 		);
 	}
 }

@@ -9,21 +9,23 @@ use Klapuch\Uri;
  */
 final class MatchingRoutes implements Routes {
 	private $origin;
+	private $uri;
 	private $method;
 
-	public function __construct(Routes $origin, string $method) {
+	public function __construct(Routes $origin, Uri\Uri $uri, string $method) {
 		$this->origin = $origin;
+		$this->uri = $uri;
 		$this->method = $method;
 	}
 
-	public function matches(Uri\Uri $uri): array {
-		$matches = $this->origin->matches($uri);
+	public function matches(): array {
+		$matches = $this->origin->matches();
 		if ($matches)
 			return $matches;
 		throw new \UnexpectedValueException(
 			sprintf(
 				'%s as %s method is not matching to any listed routes',
-				$uri->path(),
+				$this->uri->path(),
 				strtoupper($this->method)
 			)
 		);
