@@ -22,7 +22,7 @@ final class MatchingRoutes implements Routes {
 			return $matches;
 		throw new \UnexpectedValueException(
 			sprintf(
-				'%s is not matching to any listed routes as %s method',
+				'%s as %s method is not matching to any listed routes',
 				$uri->path(),
 				strtoupper($this->method)
 			)
