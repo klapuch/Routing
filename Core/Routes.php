@@ -6,9 +6,9 @@ use Klapuch\Uri;
 
 interface Routes {
 	/**
-	 * The matched route
+	 * The matched routes
 	 * @param \Klapuch\Uri\Uri $uri
-	 * @return \Klapuch\Routing\Route
+	 * @return array
 	 */
-	public function match(Uri\Uri $uri): Route;
+	public function matches(Uri\Uri $uri): array;
 }
