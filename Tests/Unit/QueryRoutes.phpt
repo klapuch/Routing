@@ -67,12 +67,12 @@ final class QueryRoutes extends Tester\TestCase {
 		);
 	}
 
-	public function testNotMatchingForDifferentParameterValue() {
+	public function testCheckingOnlyQueryPart() {
 		Assert::same(
 			[],
 			(new Routing\QueryRoutes(
 				new Routing\FakeRoutes(['foo?name=cool [GET]' => 'a']),
-				new Uri\FakeUri(null, null, ['name' => 'x'])
+				new Uri\FakeUri(null, 'bar', ['name' => 'x'])
 			))->matches()
 		);
 	}
