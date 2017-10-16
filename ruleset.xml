@@ -41,6 +41,10 @@
 		<exclude-pattern>Tests/Unit</exclude-pattern>
 	</rule>
 
+	<rule ref="SlevomatCodingStandard.ControlStructures.DisallowEqualOperators.DisallowedEqualOperator">
+		<exclude-pattern>Core/QueryRoutes.php</exclude-pattern>
+	</rule>
+
 	<rule ref="SlevomatCodingStandard.TypeHints.TypeHintDeclaration">
 		<properties>
 			<property name="usefulAnnotations" type="array" value="@dataProvider,@throws"/>
