@@ -3,7 +3,7 @@ declare(strict_types = 1);
 namespace Klapuch\Routing;
 
 /**
- * Shortcut rules for routes
+ * Shortcut replacements for routes
  */
 final class ShortcutRoutes implements Routes {
 	private const SHORTCUTS = [

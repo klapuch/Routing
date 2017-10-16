@@ -3,7 +3,7 @@ declare(strict_types = 1);
 namespace Klapuch\Routing;
 
 /**
- * Routes loaded as JSON
+ * Routes loaded from JSON file
  */
 final class JsonRoutes implements Routes {
 	private $json;

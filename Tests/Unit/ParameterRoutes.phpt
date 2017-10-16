@@ -13,11 +13,11 @@ use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
 
-final class RegexRoutes extends Tester\TestCase {
+final class ParameterRoutes extends Tester\TestCase {
 	public function testPassingWithMatchingRegex() {
 		Assert::same(
 			['foo/{name \d+} [GET]' => 'a'],
-			(new Routing\RegexRoutes(
+			(new Routing\ParameterRoutes(
 				new Routing\FakeRoutes(['foo/{name \d+} [GET]' => 'a']),
 				new Uri\FakeUri(null, 'foo/123')
 			))->matches()
@@ -27,14 +27,14 @@ final class RegexRoutes extends Tester\TestCase {
 	public function testCaseInsensitiveMatch() {
 		Assert::same(
 			['foo/{name \d+} [GET]' => 'a'],
-			(new Routing\RegexRoutes(
+			(new Routing\ParameterRoutes(
 				new Routing\FakeRoutes(['foo/{name \d+} [GET]' => 'a']),
 				new Uri\FakeUri(null, 'FOO/123')
 			))->matches()
 		);
 		Assert::same(
 			['FOO/{name \d+} [GET]' => 'a'],
-			(new Routing\RegexRoutes(
+			(new Routing\ParameterRoutes(
 				new Routing\FakeRoutes(['FOO/{name \d+} [GET]' => 'a']),
 				new Uri\FakeUri(null, 'foo/123')
 			))->matches()
@@ -44,7 +44,7 @@ final class RegexRoutes extends Tester\TestCase {
 	public function testRemovingNotMatching() {
 		Assert::same(
 			[],
-			(new Routing\RegexRoutes(
+			(new Routing\ParameterRoutes(
 				new Routing\FakeRoutes(['foo/{name \d+} [GET]' => 'a']),
 				new Uri\FakeUri(null, 'foo/abc')
 			))->matches()
@@ -54,7 +54,7 @@ final class RegexRoutes extends Tester\TestCase {
 	public function testFilteringOnlyMatched() {
 		Assert::same(
 			['foo/{name \d+} [GET]' => 'a'],
-			(new Routing\RegexRoutes(
+			(new Routing\ParameterRoutes(
 				new Routing\FakeRoutes(
 					[
 						'foo/{name \d+} [GET]' => 'a',
@@ -72,14 +72,14 @@ final class RegexRoutes extends Tester\TestCase {
 	public function testDefaultRegexes(string $path) {
 		Assert::same(
 			['foo/{name}' => 'a'],
-			(new Routing\RegexRoutes(
+			(new Routing\ParameterRoutes(
 				new Routing\FakeRoutes(['foo/{name}' => 'a']),
 				new Uri\FakeUri(null, $path)
 			))->matches()
 		);
 		Assert::same(
 			['foo/{name} [GET]' => 'a'],
-			(new Routing\RegexRoutes(
+			(new Routing\ParameterRoutes(
 				new Routing\FakeRoutes(['foo/{name} [GET]' => 'a']),
 				new Uri\FakeUri(null, $path)
 			))->matches()
@@ -96,4 +96,4 @@ final class RegexRoutes extends Tester\TestCase {
 }
 
 
-(new RegexRoutes())->run();
+(new ParameterRoutes())->run();

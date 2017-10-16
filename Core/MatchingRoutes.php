@@ -5,7 +5,7 @@ namespace Klapuch\Routing;
 use Klapuch\Uri;
 
 /**
- * Matching routes
+ * Any matching route
  */
 final class MatchingRoutes implements Routes {
 	private $origin;
