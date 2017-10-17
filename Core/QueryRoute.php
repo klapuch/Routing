@@ -25,12 +25,11 @@ final class QueryRoute implements Route {
 	}
 
 	public function parameters(): array {
-		$query = array_map(
+		return $this->uri->query() + array_map(
 			function(string $parameter): string {
 				return substr($parameter, 1, -1);
 			},
 			$this->origin->parameters()
 		);
-		return $this->uri->query() + array_map('intval', array_filter($query, 'is_numeric')) + $query;
 	}
 }
