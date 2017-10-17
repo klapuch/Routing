@@ -76,6 +76,16 @@ final class QueryRoutes extends Tester\TestCase {
 			))->matches()
 		);
 	}
+
+	public function testBracesForDefaultValue() {
+		Assert::same(
+			['foo?page=(1) [GET]' => 'a'],
+			(new Routing\QueryRoutes(
+				new Routing\FakeRoutes(['foo?page=(1) [GET]' => 'a']),
+				new Uri\FakeUri(null, null, [])
+			))->matches()
+		);
+	}
 }
 
 

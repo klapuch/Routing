@@ -24,9 +24,34 @@ final class QueryRoutes implements Routes {
 					parse_url(preg_replace('~\s(\[\w+\])~', '', $match), PHP_URL_QUERY),
 					$query
 				);
-				return array_intersect_assoc($this->uri->query(), $query) == $query; // == intentionally because of order
+				return $this->includes($this->uri, $query, $this->defaults($query));
 			},
 			ARRAY_FILTER_USE_KEY
+		);
+	}
+
+	/**
+	 * Dies the URI includes given query within defaults?
+	 * @param \Klapuch\Uri\Uri $uri
+	 * @param array $query
+	 * @param array $defaults
+	 * @return bool
+	 */
+	private function includes(Uri\Uri $uri, array $query, array $defaults): bool {
+		return array_intersect_assoc($defaults + $uri->query(), $defaults + $query) == $defaults + $query; // == intentionally because of order
+	}
+
+	/**
+	 * Default values extracted from query - everything in brace
+	 * @param array $query
+	 * @return array
+	 */
+	private function defaults(array $query): array {
+		return array_map(
+			function(string $parameter): string {
+				return substr($parameter, 1, -1);
+			},
+			preg_grep('~\(.+\)$~', $query)
 		);
 	}
 }
