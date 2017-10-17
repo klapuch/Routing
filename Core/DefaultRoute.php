@@ -5,9 +5,9 @@ namespace Klapuch\Routing;
 use Klapuch\Uri;
 
 /**
- * Direct destination within class name, method and parameters
+ * Default root for Route
  */
-final class HttpRoute implements Route {
+final class DefaultRoute implements Route {
 	private const SEPARATOR = '/';
 	private const RESOURCE = 0,
 		ACTION = 1;
@@ -30,15 +30,20 @@ final class HttpRoute implements Route {
 	}
 
 	public function parameters(): array {
-		$sources = explode(self::SEPARATOR, $this->source);
-		$parameters = array_diff(explode(self::SEPARATOR, $this->uri->path()), $sources);
+		parse_str((string) parse_url($this->source, PHP_URL_QUERY), $query);
+		return $query + $this->path($this->source, $this->uri);
+	}
+
+	private function path(string $source, Uri\Uri $uri): array {
+		$sources = explode(self::SEPARATOR, parse_url($source, PHP_URL_PATH));
+		$parameters = array_diff(explode(self::SEPARATOR, $uri->path()), $sources);
 		return array_combine(
 			preg_replace(
 				'~{|}|\s\S+~',
 				'',
 				array_intersect_key($sources, $parameters)
 			),
-			array_map('intval', array_filter($parameters, 'is_numeric')) + $parameters
+			$parameters
 		);
 	}
 }

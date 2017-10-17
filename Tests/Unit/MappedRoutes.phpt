@@ -23,7 +23,7 @@ final class MappedRoutes extends Tester\TestCase {
 				]
 			),
 			function(array $match): Routing\Route {
-				return new Routing\HttpRoute(
+				return new Routing\DefaultRoute(
 					key($match),
 					current($match),
 					new Uri\FakeUri()
@@ -32,8 +32,8 @@ final class MappedRoutes extends Tester\TestCase {
 		))->matches();
 		Assert::equal(
 			[
-				'foo/{name :int} [GET]' => new Routing\HttpRoute('foo/{name :int} [GET]', 'a', new Uri\FakeUri()),
-				'bar/{name :int} [GET]' => new Routing\HttpRoute('bar/{name :int} [GET]', 'a', new Uri\FakeUri()),
+				'foo/{name :int} [GET]' => new Routing\DefaultRoute('foo/{name :int} [GET]', 'a', new Uri\FakeUri()),
+				'bar/{name :int} [GET]' => new Routing\DefaultRoute('bar/{name :int} [GET]', 'a', new Uri\FakeUri()),
 			],
 			$routes
 		);
