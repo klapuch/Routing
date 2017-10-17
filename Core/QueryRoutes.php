@@ -21,7 +21,7 @@ final class QueryRoutes implements Routes {
 			$this->origin->matches(),
 			function(string $match): bool {
 				parse_str(
-					parse_url(preg_replace('~\s(\[\w+\])~', '', $match), PHP_URL_QUERY),
+					(string) parse_url(preg_replace('~\s(\[\w+\])~', '', $match), PHP_URL_QUERY),
 					$query
 				);
 				return $this->includes($this->uri, $query, $this->defaults($query));

@@ -86,6 +86,16 @@ final class QueryRoutes extends Tester\TestCase {
 			))->matches()
 		);
 	}
+
+	public function testPassingWithoutQuery() {
+		Assert::same(
+			['foo [GET]' => 'a'],
+			(new Routing\QueryRoutes(
+				new Routing\FakeRoutes(['foo [GET]' => 'a']),
+				new Uri\FakeUri(null, null, [])
+			))->matches()
+		);
+	}
 }
 
 

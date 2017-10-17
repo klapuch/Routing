@@ -66,7 +66,12 @@ final class ParameterRoutes implements Routes {
 			'/',
 			array_map(
 				[$this, 'pattern'],
-				explode('/', str_replace(current($method), '', $match))
+				array_map(
+					function(string $part): string {
+						return parse_url($part, PHP_URL_PATH);
+					},
+					explode('/', str_replace(current($method), '', $match))
+				)
 			)
 		) . current($method);
 	}

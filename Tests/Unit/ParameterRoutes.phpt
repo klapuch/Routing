@@ -16,9 +16,9 @@ require __DIR__ . '/../bootstrap.php';
 final class ParameterRoutes extends Tester\TestCase {
 	public function testPassingWithMatchingRegex() {
 		Assert::same(
-			['foo/{name \d+} [GET]' => 'a'],
+			['foo/{name \d+}' => 'a'],
 			(new Routing\ParameterRoutes(
-				new Routing\FakeRoutes(['foo/{name \d+} [GET]' => 'a']),
+				new Routing\FakeRoutes(['foo/{name \d+}' => 'a']),
 				new Uri\FakeUri(null, 'foo/123')
 			))->matches()
 		);
@@ -61,6 +61,26 @@ final class ParameterRoutes extends Tester\TestCase {
 						'bar/{name \w+} [GET]' => 'b',
 					]
 				),
+				new Uri\FakeUri(null, 'foo/123')
+			))->matches()
+		);
+	}
+
+	public function testIgnoringQueryPart() {
+		Assert::same(
+			['foo/{name \d+}?page=(1) [GET]' => 'a'],
+			(new Routing\ParameterRoutes(
+				new Routing\FakeRoutes(['foo/{name \d+}?page=(1) [GET]' => 'a']),
+				new Uri\FakeUri(null, 'foo/123')
+			))->matches()
+		);
+	}
+
+	public function testIgnoringMethodPart() {
+		Assert::same(
+			['foo/{name \d+} [GET]' => 'a'],
+			(new Routing\ParameterRoutes(
+				new Routing\FakeRoutes(['foo/{name \d+} [GET]' => 'a']),
 				new Uri\FakeUri(null, 'foo/123')
 			))->matches()
 		);
