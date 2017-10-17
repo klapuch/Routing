@@ -22,7 +22,6 @@ final class TypedRoute implements Route {
 
 	public function parameters(): array {
 		$parameters = $this->origin->parameters();
-		return array_map('intval', array_filter($parameters, 'is_numeric'))
-			+ $parameters;
+		return array_map('intval', array_filter($parameters, 'is_numeric')) + $parameters;
 	}
 }
