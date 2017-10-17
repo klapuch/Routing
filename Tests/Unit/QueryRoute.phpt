@@ -34,16 +34,6 @@ final class QueryRoute extends Tester\TestCase {
 		);
 	}
 
-	public function testConvertingTypes() {
-		Assert::same(
-			['page' => '2', 'per_page' => 10, 'name' => 'foo'],
-			(new Routing\QueryRoute(
-				new Routing\FakeRoute(null, null, ['per_page' => '(10)', 'name' => '(foo)']),
-				new Uri\FakeUri(null, null, ['page' => '2'])
-			))->parameters()
-		);
-	}
-
 	public function testComplementaryValue() {
 		Assert::same(
 			['mood' => 'good'],
