@@ -19,7 +19,7 @@ final class HttpMethodRoutes implements Routes {
 			$this->origin->matches(),
 			array_flip(
 				preg_grep(
-					sprintf('~\[%s\]$~i', $this->method),
+					sprintf('~\s+\[%s\]$~i', $this->method),
 					array_keys($this->origin->matches())
 				)
 			)

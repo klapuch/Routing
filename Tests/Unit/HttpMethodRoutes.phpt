@@ -54,6 +54,16 @@ final class HttpMethodRoutes extends Tester\TestCase {
 			))->matches()
 		);
 	}
+
+	public function testEndingAsMethodWithSpace() {
+		Assert::same(
+			[],
+			(new Routing\HttpMethodRoutes(
+				new Routing\FakeRoutes(['foo[GET]' => 'a']),
+				'GET'
+			))->matches()
+		);
+	}
 }
 
 
