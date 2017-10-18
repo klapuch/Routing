@@ -31,7 +31,7 @@ final class QueryRoutes implements Routes {
 	}
 
 	/**
-	 * Dies the URI includes given query within defaults?
+	 * Does the URI includes given query within defaults?
 	 * @param \Klapuch\Uri\Uri $uri
 	 * @param array $query
 	 * @param array $defaults
