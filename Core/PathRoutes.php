@@ -5,9 +5,9 @@ namespace Klapuch\Routing;
 use Klapuch\Uri;
 
 /**
- * Routes matching parameter parts
+ * Routes matching path parts
  */
-final class ParameterRoutes implements Routes {
+final class PathRoutes implements Routes {
 	private $origin;
 	private $uri;
 

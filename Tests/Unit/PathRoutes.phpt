@@ -13,11 +13,11 @@ use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
 
-final class ParameterRoutes extends Tester\TestCase {
+final class PathRoutes extends Tester\TestCase {
 	public function testPassingWithMatchingRegex() {
 		Assert::same(
 			['foo/{name \d+}' => 'a'],
-			(new Routing\ParameterRoutes(
+			(new Routing\PathRoutes(
 				new Routing\FakeRoutes(['foo/{name \d+}' => 'a']),
 				new Uri\FakeUri(null, 'foo/123')
 			))->matches()
@@ -27,14 +27,14 @@ final class ParameterRoutes extends Tester\TestCase {
 	public function testCaseInsensitiveMatch() {
 		Assert::same(
 			['foo/{name \d+} [GET]' => 'a'],
-			(new Routing\ParameterRoutes(
+			(new Routing\PathRoutes(
 				new Routing\FakeRoutes(['foo/{name \d+} [GET]' => 'a']),
 				new Uri\FakeUri(null, 'FOO/123')
 			))->matches()
 		);
 		Assert::same(
 			['FOO/{name \d+} [GET]' => 'a'],
-			(new Routing\ParameterRoutes(
+			(new Routing\PathRoutes(
 				new Routing\FakeRoutes(['FOO/{name \d+} [GET]' => 'a']),
 				new Uri\FakeUri(null, 'foo/123')
 			))->matches()
@@ -44,7 +44,7 @@ final class ParameterRoutes extends Tester\TestCase {
 	public function testRemovingNotMatching() {
 		Assert::same(
 			[],
-			(new Routing\ParameterRoutes(
+			(new Routing\PathRoutes(
 				new Routing\FakeRoutes(['foo/{name \d+} [GET]' => 'a']),
 				new Uri\FakeUri(null, 'foo/abc')
 			))->matches()
@@ -54,7 +54,7 @@ final class ParameterRoutes extends Tester\TestCase {
 	public function testFilteringOnlyMatched() {
 		Assert::same(
 			['foo/{name \d+} [GET]' => 'a'],
-			(new Routing\ParameterRoutes(
+			(new Routing\PathRoutes(
 				new Routing\FakeRoutes(
 					[
 						'foo/{name \d+} [GET]' => 'a',
@@ -69,7 +69,7 @@ final class ParameterRoutes extends Tester\TestCase {
 	public function testIgnoringQueryPart() {
 		Assert::same(
 			['foo/{name \d+}?page=(1) [GET]' => 'a'],
-			(new Routing\ParameterRoutes(
+			(new Routing\PathRoutes(
 				new Routing\FakeRoutes(['foo/{name \d+}?page=(1) [GET]' => 'a']),
 				new Uri\FakeUri(null, 'foo/123')
 			))->matches()
@@ -79,7 +79,7 @@ final class ParameterRoutes extends Tester\TestCase {
 	public function testIgnoringMethodPart() {
 		Assert::same(
 			['foo/{name \d+} [GET]' => 'a'],
-			(new Routing\ParameterRoutes(
+			(new Routing\PathRoutes(
 				new Routing\FakeRoutes(['foo/{name \d+} [GET]' => 'a']),
 				new Uri\FakeUri(null, 'foo/123')
 			))->matches()
@@ -92,14 +92,14 @@ final class ParameterRoutes extends Tester\TestCase {
 	public function testDefaultRegexes(string $path) {
 		Assert::same(
 			['foo/{name}' => 'a'],
-			(new Routing\ParameterRoutes(
+			(new Routing\PathRoutes(
 				new Routing\FakeRoutes(['foo/{name}' => 'a']),
 				new Uri\FakeUri(null, $path)
 			))->matches()
 		);
 		Assert::same(
 			['foo/{name} [GET]' => 'a'],
-			(new Routing\ParameterRoutes(
+			(new Routing\PathRoutes(
 				new Routing\FakeRoutes(['foo/{name} [GET]' => 'a']),
 				new Uri\FakeUri(null, $path)
 			))->matches()
@@ -116,4 +116,4 @@ final class ParameterRoutes extends Tester\TestCase {
 }
 
 
-(new ParameterRoutes())->run();
+(new PathRoutes())->run();
