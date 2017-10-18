@@ -41,18 +41,62 @@ final class DefaultRoute extends Tester\TestCase {
 			(new Routing\DefaultRoute(
 				'/books/{name}/{position}',
 				'Foo/bar',
-				new Uri\FakeUri(null, '/books/dom/developer')
+				new Uri\FakeUri(null, '/books/dom/developer', [])
 			))->parameters()
 		);
 	}
 
-	public function testExtractingWithQuery() {
+	public function testExtractingWithoutDefaultQuery() {
 		Assert::same(
 			['page' => '1', 'name' => 'dom', 'position' => 'developer'],
 			(new Routing\DefaultRoute(
 				'/books/{name}/{position}?page=1',
 				'Foo/bar',
-				new Uri\FakeUri(null, '/books/dom/developer')
+				new Uri\FakeUri(null, '/books/dom/developer', [])
+			))->parameters()
+		);
+	}
+
+	public function testIgnoringTrailingMethod() {
+		Assert::same(
+			['page' => '1', 'name' => 'dom', 'position' => 'developer'],
+			(new Routing\DefaultRoute(
+				'/books/{name}/{position}?page=1 [GET]',
+				'Foo/bar',
+				new Uri\FakeUri(null, '/books/dom/developer', [])
+			))->parameters()
+		);
+	}
+
+	public function testExtractingWithDefaultQuery() {
+		Assert::same(
+			['page' => '1', 'name' => 'dom', 'position' => 'developer'],
+			(new Routing\DefaultRoute(
+				'/books/{name}/{position}?page=(1)',
+				'Foo/bar',
+				new Uri\FakeUri(null, '/books/dom/developer', [])
+			))->parameters()
+		);
+	}
+
+	public function testNotOverwritingQueryAsAlreadyStated() {
+		Assert::same(
+			['page' => 2, 'name' => 'dom', 'position' => 'developer'],
+			(new Routing\DefaultRoute(
+				'/books/{name}/{position}?page=(1)',
+				'Foo/bar',
+				new Uri\FakeUri(null, '/books/dom/developer', ['page' => 2])
+			))->parameters()
+		);
+	}
+
+	public function testBracesAsRegularValue() {
+		Assert::same(
+			['page' => '(1)', 'name' => 'dom', 'position' => 'developer'],
+			(new Routing\DefaultRoute(
+				'/books/{name}/{position}?page=((1))',
+				'Foo/bar',
+				new Uri\FakeUri(null, '/books/dom/developer', [])
 			))->parameters()
 		);
 	}
@@ -63,7 +107,7 @@ final class DefaultRoute extends Tester\TestCase {
 			(new Routing\DefaultRoute(
 				'/books/{page}/{position}?page=1',
 				'Foo/bar',
-				new Uri\FakeUri(null, '/books/2/developer')
+				new Uri\FakeUri(null, '/books/2/developer', [])
 			))->parameters()
 		);
 	}
@@ -74,7 +118,7 @@ final class DefaultRoute extends Tester\TestCase {
 			(new Routing\DefaultRoute(
 				'/books/{foo \d+}/{adjective \w+}/{word}',
 				'Foo/bar',
-				new Uri\FakeUri(null, '/books/10/cool/bar')
+				new Uri\FakeUri(null, '/books/10/cool/bar', [])
 			))->parameters()
 		);
 	}
