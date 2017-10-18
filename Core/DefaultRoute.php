@@ -30,13 +30,7 @@ final class DefaultRoute implements Route {
 	}
 
 	public function parameters(): array {
-		parse_str((string) parse_url(preg_replace('~\s+\[.+\]$~', '', $this->source), PHP_URL_QUERY), $query);
-		return $this->uri->query() + array_map(
-			function(string $part): string {
-				return substr($part, 1, -1);
-			},
-			preg_grep('~^\(.*\)$~', $query)
-		) + $query + $this->path($this->source, $this->uri);
+		return $this->query($this->source, $this->uri) + $this->path($this->source, $this->uri);
 	}
 
 	private function path(string $source, Uri\Uri $uri): array {
@@ -50,5 +44,21 @@ final class DefaultRoute implements Route {
 			),
 			$parameters
 		);
+	}
+
+	private function query(string $source, Uri\Uri $uri): array {
+		parse_str(
+			(string) parse_url(
+				preg_replace('~\s+\[.+\]$~', '', $source),
+				PHP_URL_QUERY
+			),
+			$query
+		);
+		return $uri->query() + array_map(
+			function(string $part): string {
+				return substr($part, 1, -1);
+			},
+			preg_grep('~^\(.*\)$~', $query)
+		) + $query;
 	}
 }
