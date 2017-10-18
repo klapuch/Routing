@@ -3,7 +3,7 @@ declare(strict_types = 1);
 namespace Klapuch\Routing;
 
 /**
- * Routes matching HTTP methods
+ * Routes matching only HTTP methods
  */
 final class HttpMethodRoutes implements Routes {
 	private $origin;

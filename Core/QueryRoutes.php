@@ -5,7 +5,7 @@ namespace Klapuch\Routing;
 use Klapuch\Uri;
 
 /**
- * Routes matching query parts
+ * Routes matching only query parts
  */
 final class QueryRoutes implements Routes {
 	private $origin;
