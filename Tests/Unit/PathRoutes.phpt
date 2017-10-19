@@ -26,16 +26,16 @@ final class PathRoutes extends Tester\TestCase {
 
 	public function testCaseInsensitiveMatch() {
 		Assert::same(
-			['foo/{name \d+} [GET]' => 'a'],
+			['foo/{name \d+}' => 'a'],
 			(new Routing\PathRoutes(
-				new Routing\FakeRoutes(['foo/{name \d+} [GET]' => 'a']),
+				new Routing\FakeRoutes(['foo/{name \d+}' => 'a']),
 				new Uri\FakeUri(null, 'FOO/123')
 			))->matches()
 		);
 		Assert::same(
-			['FOO/{name \d+} [GET]' => 'a'],
+			['FOO/{name \d+}' => 'a'],
 			(new Routing\PathRoutes(
-				new Routing\FakeRoutes(['FOO/{name \d+} [GET]' => 'a']),
+				new Routing\FakeRoutes(['FOO/{name \d+}' => 'a']),
 				new Uri\FakeUri(null, 'foo/123')
 			))->matches()
 		);
@@ -45,7 +45,7 @@ final class PathRoutes extends Tester\TestCase {
 		Assert::same(
 			[],
 			(new Routing\PathRoutes(
-				new Routing\FakeRoutes(['foo/{name \d+} [GET]' => 'a']),
+				new Routing\FakeRoutes(['foo/{name \d+}' => 'a']),
 				new Uri\FakeUri(null, 'foo/abc')
 			))->matches()
 		);
@@ -53,12 +53,12 @@ final class PathRoutes extends Tester\TestCase {
 
 	public function testFilteringOnlyMatched() {
 		Assert::same(
-			['foo/{name \d+} [GET]' => 'a'],
+			['foo/{name \d+}' => 'a'],
 			(new Routing\PathRoutes(
 				new Routing\FakeRoutes(
 					[
-						'foo/{name \d+} [GET]' => 'a',
-						'bar/{name \w+} [GET]' => 'b',
+						'foo/{name \d+}' => 'a',
+						'bar/{name \w+}' => 'b',
 					]
 				),
 				new Uri\FakeUri(null, 'foo/123')
@@ -68,9 +68,9 @@ final class PathRoutes extends Tester\TestCase {
 
 	public function testIgnoringQueryPart() {
 		Assert::same(
-			['foo/{name \d+}?page=(1) [GET]' => 'a'],
+			['foo/{name \d+}?page=(1)' => 'a'],
 			(new Routing\PathRoutes(
-				new Routing\FakeRoutes(['foo/{name \d+}?page=(1) [GET]' => 'a']),
+				new Routing\FakeRoutes(['foo/{name \d+}?page=(1)' => 'a']),
 				new Uri\FakeUri(null, 'foo/123')
 			))->matches()
 		);
@@ -78,9 +78,9 @@ final class PathRoutes extends Tester\TestCase {
 
 	public function testIgnoringMethodPart() {
 		Assert::same(
-			['foo/{name \d+} [GET]' => 'a'],
+			['foo/{name \d+}' => 'a'],
 			(new Routing\PathRoutes(
-				new Routing\FakeRoutes(['foo/{name \d+} [GET]' => 'a']),
+				new Routing\FakeRoutes(['foo/{name \d+}' => 'a']),
 				new Uri\FakeUri(null, 'foo/123')
 			))->matches()
 		);
@@ -98,9 +98,9 @@ final class PathRoutes extends Tester\TestCase {
 			))->matches()
 		);
 		Assert::same(
-			['foo/{name} [GET]' => 'a'],
+			['foo/{name}' => 'a'],
 			(new Routing\PathRoutes(
-				new Routing\FakeRoutes(['foo/{name} [GET]' => 'a']),
+				new Routing\FakeRoutes(['foo/{name}' => 'a']),
 				new Uri\FakeUri(null, $path)
 			))->matches()
 		);

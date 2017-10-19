@@ -61,7 +61,6 @@ final class PathRoutes implements Routes {
 	 * @return string
 	 */
 	private function filling(string $match): string {
-		preg_match('~\s(\[\w+\])~', $match, $method);
 		return implode(
 			'/',
 			array_map(
@@ -70,10 +69,10 @@ final class PathRoutes implements Routes {
 					function(string $part): string {
 						return parse_url($part, PHP_URL_PATH);
 					},
-					explode('/', str_replace(current($method), '', $match))
+					explode('/', $match)
 				)
 			)
-		) . current($method);
+		);
 	}
 
 	/**

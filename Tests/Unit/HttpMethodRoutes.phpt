@@ -15,7 +15,7 @@ require __DIR__ . '/../bootstrap.php';
 final class HttpMethodRoutes extends Tester\TestCase {
 	public function testFilteringByMethods() {
 		Assert::same(
-			['foo [GET]' => 'a'],
+			['foo' => 'a'],
 			(new Routing\HttpMethodRoutes(
 				new Routing\FakeRoutes(
 					[
@@ -30,14 +30,14 @@ final class HttpMethodRoutes extends Tester\TestCase {
 
 	public function testFilteringByCaseInsensitiveMethods() {
 		Assert::same(
-			['foo [post]' => 'a'],
+			['foo' => 'a'],
 			(new Routing\HttpMethodRoutes(
 				new Routing\FakeRoutes(['foo [post]' => 'a']),
 				'POST'
 			))->matches()
 		);
 		Assert::same(
-			['foo [POST]' => 'a'],
+			['foo' => 'a'],
 			(new Routing\HttpMethodRoutes(
 				new Routing\FakeRoutes(['foo [POST]' => 'a']),
 				'post'

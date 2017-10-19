@@ -47,13 +47,7 @@ final class DefaultRoute implements Route {
 	}
 
 	private function query(string $source, Uri\Uri $uri): array {
-		parse_str(
-			(string) parse_url(
-				preg_replace('~\s+\[.+\]$~', '', $source),
-				PHP_URL_QUERY
-			),
-			$query
-		);
+		parse_str((string) parse_url($source, PHP_URL_QUERY), $query);
 		return $uri->query() + array_map(
 			function(string $part): string {
 				return substr($part, 1, -1);
