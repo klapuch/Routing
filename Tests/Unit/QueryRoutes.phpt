@@ -17,17 +17,17 @@ final class QueryRoutes extends Tester\TestCase {
 	public function testMatchingAnyWithMatchingQuery() {
 		Assert::same(
 			[
-				'{foo :string}?name=cool [GET]' => 'a',
+				'{foo :string}?name=cool' => 'a',
 				'{foo (\w\d+*[])}?name=cool' => 'b',
-				'bar?name=cool [GET]' => 'd',
+				'bar?name=cool' => 'd',
 			],
 			(new Routing\QueryRoutes(
 				new Routing\FakeRoutes(
 					[
-						'{foo :string}?name=cool [GET]' => 'a',
+						'{foo :string}?name=cool' => 'a',
 						'{foo (\w\d+*[])}?name=cool' => 'b',
-						'foo?name=not_cool [GET]' => 'c',
-						'bar?name=cool [GET]' => 'd',
+						'foo?name=not_cool' => 'c',
+						'bar?name=cool' => 'd',
 					]
 				),
 				new Uri\FakeUri(null, null, ['name' => 'cool'])
@@ -37,10 +37,10 @@ final class QueryRoutes extends Tester\TestCase {
 
 	public function testMatchingWithRandomOrder() {
 		Assert::same(
-			['foo?name=cool&position=developer [GET]' => 'a'],
+			['foo?name=cool&position=developer' => 'a'],
 			(new Routing\QueryRoutes(
 				new Routing\FakeRoutes(
-					['foo?name=cool&position=developer [GET]' => 'a']
+					['foo?name=cool&position=developer' => 'a']
 				),
 				new Uri\FakeUri(null, null, ['position' => 'developer', 'name' => 'cool'])
 			))->matches()
@@ -49,9 +49,9 @@ final class QueryRoutes extends Tester\TestCase {
 
 	public function testIgnoringOtherNotRelevantParameters() {
 		Assert::same(
-			['foo?name=cool [GET]' => 'a'],
+			['foo?name=cool' => 'a'],
 			(new Routing\QueryRoutes(
-				new Routing\FakeRoutes(['foo?name=cool [GET]' => 'a']),
+				new Routing\FakeRoutes(['foo?name=cool' => 'a']),
 				new Uri\FakeUri(null, null, ['position' => 'developer', 'name' => 'cool'])
 			))->matches()
 		);
@@ -61,7 +61,7 @@ final class QueryRoutes extends Tester\TestCase {
 		Assert::same(
 			[],
 			(new Routing\QueryRoutes(
-				new Routing\FakeRoutes(['foo?name=cool [GET]' => 'a']),
+				new Routing\FakeRoutes(['foo?name=cool' => 'a']),
 				new Uri\FakeUri(null, null, ['x' => 'cool'])
 			))->matches()
 		);
@@ -71,7 +71,7 @@ final class QueryRoutes extends Tester\TestCase {
 		Assert::same(
 			[],
 			(new Routing\QueryRoutes(
-				new Routing\FakeRoutes(['foo?name=cool [GET]' => 'a']),
+				new Routing\FakeRoutes(['foo?name=cool' => 'a']),
 				new Uri\FakeUri(null, 'bar', ['name' => 'x'])
 			))->matches()
 		);
@@ -79,9 +79,9 @@ final class QueryRoutes extends Tester\TestCase {
 
 	public function testBracesForDefaultValue() {
 		Assert::same(
-			['foo?page=(1) [GET]' => 'a'],
+			['foo?page=(1)' => 'a'],
 			(new Routing\QueryRoutes(
-				new Routing\FakeRoutes(['foo?page=(1) [GET]' => 'a']),
+				new Routing\FakeRoutes(['foo?page=(1)' => 'a']),
 				new Uri\FakeUri(null, null, [])
 			))->matches()
 		);
@@ -89,9 +89,9 @@ final class QueryRoutes extends Tester\TestCase {
 
 	public function testPassingWithoutQuery() {
 		Assert::same(
-			['foo [GET]' => 'a'],
+			['foo' => 'a'],
 			(new Routing\QueryRoutes(
-				new Routing\FakeRoutes(['foo [GET]' => 'a']),
+				new Routing\FakeRoutes(['foo' => 'a']),
 				new Uri\FakeUri(null, null, [])
 			))->matches()
 		);

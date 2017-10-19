@@ -20,10 +20,7 @@ final class QueryRoutes implements Routes {
 		return array_filter(
 			$this->origin->matches(),
 			function(string $match): bool {
-				parse_str(
-					(string) parse_url(preg_replace('~\s(\[\w+\])~', '', $match), PHP_URL_QUERY),
-					$query
-				);
+				parse_str((string) parse_url($match, PHP_URL_QUERY), $query);
 				return $this->includes($this->uri, $query, $this->defaults($query));
 			},
 			ARRAY_FILTER_USE_KEY

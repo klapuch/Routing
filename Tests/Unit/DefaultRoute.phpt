@@ -61,7 +61,7 @@ final class DefaultRoute extends Tester\TestCase {
 		Assert::same(
 			['page' => '1', 'name' => 'dom', 'position' => 'developer'],
 			(new Routing\DefaultRoute(
-				'/books/{name}/{position}?page=1 [GET]',
+				'/books/{name}/{position}?page=1',
 				'Foo/bar',
 				new Uri\FakeUri(null, '/books/dom/developer', [])
 			))->parameters()
