@@ -18,8 +18,6 @@ final class TypedRoute extends Tester\TestCase {
 			['a' => 1, 'b' => 123456789, 'c' => '1ab', 'd' => 'ba1'],
 			(new Routing\TypedRoute(
 				new Routing\FakeRoute(
-					null,
-					null,
 					[
 						'a' => '1',
 						'b' => '123456789',

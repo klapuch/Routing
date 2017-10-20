@@ -9,24 +9,12 @@ use Klapuch\Uri;
  */
 final class DefaultRoute implements Route {
 	private const SEPARATOR = '/';
-	private const RESOURCE = 0,
-		ACTION = 1;
 	private $source;
-	private $destination;
 	private $uri;
 
-	public function __construct(string $source, string $destination, Uri\Uri $uri) {
+	public function __construct(string $source, Uri\Uri $uri) {
 		$this->source = $source;
-		$this->destination = $destination;
 		$this->uri = $uri;
-	}
-
-	public function resource(): string {
-		return explode(self::SEPARATOR, $this->destination, 2)[self::RESOURCE];
-	}
-
-	public function action(): string {
-		return explode(self::SEPARATOR, $this->destination, 2)[self::ACTION] ?? '';
 	}
 
 	public function parameters(): array {

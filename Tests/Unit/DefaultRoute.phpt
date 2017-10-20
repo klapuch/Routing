@@ -14,33 +14,11 @@ use Tester\Assert;
 require __DIR__ . '/../bootstrap.php';
 
 final class DefaultRoute extends Tester\TestCase {
-	public function testExtractingResourceName() {
-		Assert::same(
-			'Foo',
-			(new Routing\DefaultRoute('', 'Foo/bar', new Uri\FakeUri()))->resource()
-		);
-	}
-
-	public function testExtractingActionName() {
-		Assert::same(
-			'bar',
-			(new Routing\DefaultRoute('', 'Foo/bar', new Uri\FakeUri()))->action()
-		);
-	}
-
-	public function testNoAvailableActionWithEmptyOutcome() {
-		Assert::same(
-			'',
-			(new Routing\DefaultRoute('foo/', 'Foo', new Uri\FakeUri()))->action()
-		);
-	}
-
 	public function testExtractingParametersByPosition() {
 		Assert::same(
 			['name' => 'dom', 'position' => 'developer'],
 			(new Routing\DefaultRoute(
 				'/books/{name}/{position}',
-				'Foo/bar',
 				new Uri\FakeUri(null, '/books/dom/developer', [])
 			))->parameters()
 		);
@@ -51,7 +29,6 @@ final class DefaultRoute extends Tester\TestCase {
 			['page' => '1', 'name' => 'dom', 'position' => 'developer'],
 			(new Routing\DefaultRoute(
 				'/books/{name}/{position}?page=1',
-				'Foo/bar',
 				new Uri\FakeUri(null, '/books/dom/developer', [])
 			))->parameters()
 		);
@@ -62,7 +39,6 @@ final class DefaultRoute extends Tester\TestCase {
 			['page' => '1', 'name' => 'dom', 'position' => 'developer'],
 			(new Routing\DefaultRoute(
 				'/books/{name}/{position}?page=1',
-				'Foo/bar',
 				new Uri\FakeUri(null, '/books/dom/developer', [])
 			))->parameters()
 		);
@@ -73,7 +49,6 @@ final class DefaultRoute extends Tester\TestCase {
 			['page' => '1', 'name' => 'dom', 'position' => 'developer'],
 			(new Routing\DefaultRoute(
 				'/books/{name}/{position}?page=(1)',
-				'Foo/bar',
 				new Uri\FakeUri(null, '/books/dom/developer', [])
 			))->parameters()
 		);
@@ -84,7 +59,6 @@ final class DefaultRoute extends Tester\TestCase {
 			['page' => 2, 'name' => 'dom', 'position' => 'developer'],
 			(new Routing\DefaultRoute(
 				'/books/{name}/{position}?page=(1)',
-				'Foo/bar',
 				new Uri\FakeUri(null, '/books/dom/developer', ['page' => 2])
 			))->parameters()
 		);
@@ -95,7 +69,6 @@ final class DefaultRoute extends Tester\TestCase {
 			['page' => '(1)', 'name' => 'dom', 'position' => 'developer'],
 			(new Routing\DefaultRoute(
 				'/books/{name}/{position}?page=((1))',
-				'Foo/bar',
 				new Uri\FakeUri(null, '/books/dom/developer', [])
 			))->parameters()
 		);
@@ -106,7 +79,6 @@ final class DefaultRoute extends Tester\TestCase {
 			['page' => '1', 'position' => 'developer'],
 			(new Routing\DefaultRoute(
 				'/books/{page}/{position}?page=1',
-				'Foo/bar',
 				new Uri\FakeUri(null, '/books/2/developer', [])
 			))->parameters()
 		);
@@ -117,7 +89,6 @@ final class DefaultRoute extends Tester\TestCase {
 			['foo' => '10', 'adjective' => 'cool', 'word' => 'bar'],
 			(new Routing\DefaultRoute(
 				'/books/{foo \d+}/{adjective \w+}/{word}',
-				'Foo/bar',
 				new Uri\FakeUri(null, '/books/10/cool/bar', [])
 			))->parameters()
 		);
