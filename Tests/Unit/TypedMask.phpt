@@ -12,12 +12,12 @@ use Tester\Assert;
 
 require __DIR__ . '/../bootstrap.php';
 
-final class TypedRoute extends Tester\TestCase {
+final class TypedMask extends Tester\TestCase {
 	public function testTypeAwareParameters() {
 		Assert::same(
 			['a' => 1, 'b' => 123456789, 'c' => '1ab', 'd' => 'ba1'],
-			(new Routing\TypedRoute(
-				new Routing\FakeRoute(
+			(new Routing\TypedMask(
+				new Routing\FakeMask(
 					[
 						'a' => '1',
 						'b' => '123456789',
@@ -31,4 +31,4 @@ final class TypedRoute extends Tester\TestCase {
 }
 
 
-(new TypedRoute())->run();
+(new TypedMask())->run();

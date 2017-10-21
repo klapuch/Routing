@@ -5,7 +5,7 @@ namespace Klapuch\Routing;
 /**
  * Fake
  */
-final class FakeRoute implements Route {
+final class FakeMask implements Mask {
 	private $parameters;
 
 	public function __construct(array $parameters = null) {
