@@ -74,6 +74,16 @@ final class DefaultRoute extends Tester\TestCase {
 		);
 	}
 
+	public function testEmptyValueAsDefault() {
+		Assert::same(
+			['page' => ''],
+			(new Routing\DefaultRoute(
+				'/books/?page=()',
+				new Uri\FakeUri(null, '/books/', [])
+			))->parameters()
+		);
+	}
+
 	public function testPrecedenceToParameters() {
 		Assert::same(
 			['page' => '1', 'position' => 'developer'],
