@@ -103,6 +103,16 @@ final class DefaultRoute extends Tester\TestCase {
 			))->parameters()
 		);
 	}
+
+	public function testExtractingDefaultQueryWithoutRegex() {
+		Assert::same(
+			['page' => '1', 'name' => 'dom', 'position' => 'developer'],
+			(new Routing\DefaultRoute(
+				'/books/{name}/{position}?page=(1 \w\d+)',
+				new Uri\FakeUri(null, '/books/dom/developer', [])
+			))->parameters()
+		);
+	}
 }
 
 

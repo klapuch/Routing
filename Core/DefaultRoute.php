@@ -38,7 +38,7 @@ final class DefaultRoute implements Route {
 		parse_str((string) parse_url($source, PHP_URL_QUERY), $query);
 		return $uri->query() + array_map(
 			function(string $part): string {
-				return substr($part, 1, -1);
+				return current(explode(' ', substr($part, 1, -1), 2));
 			},
 			preg_grep('~^\(.*\)$~', $query)
 		) + $query;
