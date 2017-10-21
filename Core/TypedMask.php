@@ -3,12 +3,12 @@ declare(strict_types = 1);
 namespace Klapuch\Routing;
 
 /**
- * Route handling correctly with types
+ * Mask handling correctly with types
  */
-final class TypedRoute implements Route {
+final class TypedMask implements Mask {
 	private $origin;
 
-	public function __construct(Route $origin) {
+	public function __construct(Mask $origin) {
 		$this->origin = $origin;
 	}
 

@@ -5,9 +5,9 @@ namespace Klapuch\Routing;
 use Klapuch\Uri;
 
 /**
- * Default root for Route
+ * Default root for mask
  */
-final class DefaultRoute implements Route {
+final class DefaultMask implements Mask {
 	private const SEPARATOR = '/';
 	private $source;
 	private $uri;
