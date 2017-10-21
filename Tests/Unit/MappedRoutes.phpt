@@ -23,7 +23,7 @@ final class MappedRoutes extends Tester\TestCase {
 				]
 			),
 			function(array $match): Routing\Mask {
-				return new Routing\DefaultMask(
+				return new Routing\PathMask(
 					key($match),
 					new Uri\FakeUri()
 				);
@@ -31,8 +31,8 @@ final class MappedRoutes extends Tester\TestCase {
 		))->matches();
 		Assert::equal(
 			[
-				'foo/{name :int} [GET]' => new Routing\DefaultMask('foo/{name :int} [GET]', new Uri\FakeUri()),
-				'bar/{name :int} [GET]' => new Routing\DefaultMask('bar/{name :int} [GET]', new Uri\FakeUri()),
+				'foo/{name :int} [GET]' => new Routing\PathMask('foo/{name :int} [GET]', new Uri\FakeUri()),
+				'bar/{name :int} [GET]' => new Routing\PathMask('bar/{name :int} [GET]', new Uri\FakeUri()),
 			],
 			$routes
 		);
