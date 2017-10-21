@@ -67,22 +67,33 @@ final class QueryRoutes extends Tester\TestCase {
 		);
 	}
 
-	public function testCheckingOnlyQueryPart() {
-		Assert::same(
-			[],
-			(new Routing\QueryRoutes(
-				new Routing\FakeRoutes(['foo?name=cool' => 'a']),
-				new Uri\FakeUri(null, 'bar', ['name' => 'x'])
-			))->matches()
-		);
-	}
-
 	public function testBracesForDefaultValue() {
 		Assert::same(
 			['foo?page=(1)' => 'a'],
 			(new Routing\QueryRoutes(
 				new Routing\FakeRoutes(['foo?page=(1)' => 'a']),
 				new Uri\FakeUri(null, null, [])
+			))->matches()
+		);
+	}
+
+	public function testPassingWithDefaultAndRegex() {
+		Assert::same(
+			[
+				'foo?page=(1 \d+)' => 'a',
+				'foo?page=(1 \w*\d*)' => 'c',
+				'foo?page=(abc \w*\d*)' => 'd',
+			],
+			(new Routing\QueryRoutes(
+				new Routing\FakeRoutes(
+					[
+						'foo?page=(1 \d+)' => 'a',
+						'foo?page=(abc \s+)' => 'b',
+						'foo?page=(1 \w*\d*)' => 'c',
+						'foo?page=(abc \w*\d*)' => 'd',
+					]
+				),
+				new Uri\FakeUri(null, null, ['page' => 2])
 			))->matches()
 		);
 	}
