@@ -30,17 +30,16 @@ final class QueryRoutes implements Routes {
 
 	private function allowed(array $patterns): bool {
 		$real = array_intersect_key($this->uri->query(), $patterns);
-		return
-			array_reduce(
-				array_keys($real),
-				function(bool $allowed, string $field) use ($real, $patterns): bool {
+		return array_reduce(
+			array_keys($real),
+			function(bool $allowed, string $field) use ($real, $patterns): bool {
 					return $allowed && preg_match(
 						sprintf('~^%s$~', $patterns[$field]),
 						(string) $real[$field]
 					);
-				},
-				true
-			);
+			},
+			true
+		);
 	}
 
 	/**
