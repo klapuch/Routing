@@ -10,7 +10,7 @@ final class HttpMethodRoutes implements Routes {
 	private $method;
 
 	public function __construct(Routes $origin, string $method) {
-		$this->origin = $origin;
+		$this->origin = new CachedRoutes($origin);
 		$this->method = $method;
 	}
 

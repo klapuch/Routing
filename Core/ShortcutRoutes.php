@@ -14,14 +14,10 @@ final class ShortcutRoutes implements Routes {
 	private $origin;
 
 	public function __construct(Routes $origin) {
-		$this->origin = $origin;
+		$this->origin = new CachedRoutes($origin);
 	}
 
 	public function matches(): array {
-		return $this->replacements($this->origin->matches());
-	}
-
-	private function replacements(array $matches): array {
 		return array_combine(
 			array_map(
 				function(string $route): string {
@@ -31,9 +27,9 @@ final class ShortcutRoutes implements Routes {
 						$route
 					);
 				},
-				array_keys($matches)
+				array_keys($this->origin->matches())
 			),
-			$matches
+			$this->origin->matches()
 		);
 	}
 }
