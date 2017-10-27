@@ -10,7 +10,7 @@ final class MappedRoutes implements Routes {
 	private $map;
 
 	public function __construct(Routes $origin, callable $map) {
-		$this->origin = $origin;
+		$this->origin = new CachedRoutes($origin);
 		$this->map = $map;
 	}
 

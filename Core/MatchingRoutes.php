@@ -13,15 +13,14 @@ final class MatchingRoutes implements Routes {
 	private $method;
 
 	public function __construct(Routes $origin, Uri\Uri $uri, string $method) {
-		$this->origin = $origin;
+		$this->origin = new CachedRoutes($origin);
 		$this->uri = $uri;
 		$this->method = $method;
 	}
 
 	public function matches(): array {
-		$matches = $this->origin->matches();
-		if ($matches)
-			return $matches;
+		if ($this->origin->matches())
+			return $this->origin->matches();
 		throw new \UnexpectedValueException(
 			sprintf(
 				'%s as %s method is not matching to any listed routes',

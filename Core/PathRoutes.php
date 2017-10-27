@@ -12,7 +12,7 @@ final class PathRoutes implements Routes {
 	private $uri;
 
 	public function __construct(Routes $origin, Uri\Uri $uri) {
-		$this->origin = $origin;
+		$this->origin = new CachedRoutes($origin);
 		$this->uri = $uri;
 	}
 
