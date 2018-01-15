@@ -24,6 +24,28 @@ final class HashIdMask extends Tester\TestCase {
 			))->parameters()
 		);
 	}
+
+	/**
+	 * @throws \UnexpectedValueException Mask contains these broken hashes: foo
+	 */
+	public function testThrowingOnBrokenHash() {
+		(new Routing\HashIdMask(
+			new Routing\FakeMask(['id' => 'foo', 'name' => 'bar']),
+			['id'],
+			new Hashids()
+		))->parameters();
+	}
+
+	/**
+	 * @throws \UnexpectedValueException Mask contains these broken hashes: foo, bar
+	 */
+	public function testThrowingOnMultipleBrokenHashes() {
+		(new Routing\HashIdMask(
+			new Routing\FakeMask(['id' => 'foo', 'name' => 'bar', 'good' => 'jR']),
+			['id', 'name', 'good'],
+			new Hashids()
+		))->parameters();
+	}
 }
 
 
