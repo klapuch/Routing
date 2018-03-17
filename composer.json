@@ -14,7 +14,7 @@
 	"require": {
 		"php": ">=7.1",
 		"klapuch/uri": "^3.0",
-		"hashids/hashids": "^2.0"
+		"hashids/hashids": "^3.0"
 	},
 	"require-dev": {
 		"nette/tester": "^2.0",
