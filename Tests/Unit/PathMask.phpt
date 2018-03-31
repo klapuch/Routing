@@ -33,6 +33,16 @@ final class PathMask extends Tester\TestCase {
 			))->parameters()
 		);
 	}
+
+	public function testPassingOnDifferentNumberOfParameters() {
+		Assert::same(
+			[],
+			(new Routing\PathMask(
+				'v1/.+',
+				new Uri\FakeUri(null, 'v1/demands/2wrWlWqMg7DY', [])
+			))->parameters()
+		);
+	}
 }
 
 
