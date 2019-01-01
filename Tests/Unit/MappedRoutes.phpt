@@ -1,9 +1,11 @@
 <?php
 declare(strict_types = 1);
+
 /**
  * @testCase
  * @phpVersion > 7.1
  */
+
 namespace Klapuch\Routing\Unit;
 
 use Klapuch\Routing;
@@ -22,7 +24,7 @@ final class MappedRoutes extends Tester\TestCase {
 					'bar/{name :int} [GET]' => 'a',
 				]
 			),
-			function(array $match): Routing\Mask {
+			static function(array $match): Routing\Mask {
 				return new Routing\PathMask(
 					key($match),
 					new Uri\FakeUri()

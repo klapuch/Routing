@@ -1,5 +1,6 @@
 <?php
 declare(strict_types = 1);
+
 namespace Klapuch\Routing;
 
 use Klapuch\Uri;
@@ -8,8 +9,13 @@ use Klapuch\Uri;
  * Any matching route
  */
 final class MatchingRoutes implements Routes {
+	/** @var \Klapuch\Routing\CachedRoutes */
 	private $origin;
+
+	/** @var \Klapuch\Uri\Uri */
 	private $uri;
+
+	/** @var string */
 	private $method;
 
 	public function __construct(Routes $origin, Uri\Uri $uri, string $method) {
@@ -19,7 +25,7 @@ final class MatchingRoutes implements Routes {
 	}
 
 	public function matches(): array {
-		if ($this->origin->matches())
+		if ($this->origin->matches() !== [])
 			return $this->origin->matches();
 		throw new \UnexpectedValueException(
 			sprintf(

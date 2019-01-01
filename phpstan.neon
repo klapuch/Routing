@@ -1,0 +1,7 @@
+includes:
+	- vendor/phpstan/phpstan-strict-rules/rules.neon
+parameters:
+	ignoreErrors:
+		# Fakes, intentional fails
+		- '~Method .+Fake.+::.+\(\) should return .+ but returns .+\|null~'
+		- '~Method Klapuch\\Routing\\PathMask::parameters\(\) should return array but returns array\|false.~' # not true

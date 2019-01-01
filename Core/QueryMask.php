@@ -1,5 +1,6 @@
 <?php
 declare(strict_types = 1);
+
 namespace Klapuch\Routing;
 
 use Klapuch\Uri;
@@ -8,7 +9,10 @@ use Klapuch\Uri;
  * Mask for query
  */
 final class QueryMask implements Mask {
+	/** @var string */
 	private $source;
+
+	/** @var \Klapuch\Uri\Uri */
 	private $uri;
 
 	public function __construct(string $source, Uri\Uri $uri) {
@@ -19,7 +23,7 @@ final class QueryMask implements Mask {
 	public function parameters(): array {
 		parse_str((string) parse_url($this->source, PHP_URL_QUERY), $query);
 		return $this->uri->query() + array_map(
-			function(string $part): string {
+			static function(string $part): string {
 					return current(explode(' ', substr($part, 1, -1), 2));
 			},
 			preg_grep('~^\(.*\)$~', $query)

@@ -1,12 +1,16 @@
 <?php
 declare(strict_types = 1);
+
 namespace Klapuch\Routing;
 
 /**
  * Routes matching only HTTP methods
  */
 final class HttpMethodRoutes implements Routes {
+	/** @var \Klapuch\Routing\CachedRoutes */
 	private $origin;
+
+	/** @var string */
 	private $method;
 
 	public function __construct(Routes $origin, string $method) {
@@ -24,8 +28,8 @@ final class HttpMethodRoutes implements Routes {
 				)
 			)
 		);
-		return array_combine(
-			preg_replace(
+		return (array) array_combine(
+			(array) preg_replace(
 				$this->pattern($this->method),
 				'',
 				array_keys($matches)

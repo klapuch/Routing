@@ -1,5 +1,6 @@
 <?php
 declare(strict_types = 1);
+
 namespace Klapuch\Routing;
 
 /**
@@ -11,6 +12,8 @@ final class ShortcutRoutes implements Routes {
 		':id' => '[1-9][0-9]*',
 		':string' => '\w*\d*',
 	];
+
+	/** @var \Klapuch\Routing\CachedRoutes */
 	private $origin;
 
 	public function __construct(Routes $origin) {
@@ -18,9 +21,9 @@ final class ShortcutRoutes implements Routes {
 	}
 
 	public function matches(): array {
-		return array_combine(
+		return (array) array_combine(
 			array_map(
-				function(string $route): string {
+				static function(string $route): string {
 					return str_replace(
 						array_keys(self::SHORTCUTS),
 						self::SHORTCUTS,

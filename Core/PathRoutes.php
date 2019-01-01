@@ -1,5 +1,6 @@
 <?php
 declare(strict_types = 1);
+
 namespace Klapuch\Routing;
 
 use Klapuch\Uri;
@@ -8,7 +9,10 @@ use Klapuch\Uri;
  * Routes matching only path parts
  */
 final class PathRoutes implements Routes {
+	/** @var \Klapuch\Routing\CachedRoutes */
 	private $origin;
+
+	/** @var \Klapuch\Uri\Uri */
 	private $uri;
 
 	public function __construct(Routes $origin, Uri\Uri $uri) {
@@ -33,8 +37,8 @@ final class PathRoutes implements Routes {
 				array_filter(
 					array_filter(
 						array_keys($this->origin->matches()),
-						function(string $match) use ($matches): bool {
-							return array_search($match, $matches) !== false;
+						static function(string $match) use ($matches): bool {
+							return array_search($match, $matches, true) !== false;
 						}
 					)
 				)
@@ -48,7 +52,7 @@ final class PathRoutes implements Routes {
 	 * @return array
 	 */
 	private function patterns(array $matches): array {
-		return array_combine(
+		return (array) array_combine(
 			array_map([$this, 'filling'], array_keys($matches)),
 			array_keys($matches)
 		);
@@ -81,7 +85,7 @@ final class PathRoutes implements Routes {
 	 * @return string
 	 */
 	private function pattern(string $part): string {
-		return preg_replace(
+		return (string) preg_replace(
 			'~{.+}~',
 			rtrim(explode(' ', $part)[1] ?? '[\w\d]+', '}'),
 			$part

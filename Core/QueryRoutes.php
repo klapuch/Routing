@@ -1,5 +1,6 @@
 <?php
 declare(strict_types = 1);
+
 namespace Klapuch\Routing;
 
 use Klapuch\Uri;
@@ -8,7 +9,10 @@ use Klapuch\Uri;
  * Routes matching only query parts
  */
 final class QueryRoutes implements Routes {
+	/** @var \Klapuch\Routing\Routes */
 	private $origin;
+
+	/** @var \Klapuch\Uri\Uri */
 	private $uri;
 
 	public function __construct(Routes $origin, Uri\Uri $uri) {
@@ -22,7 +26,7 @@ final class QueryRoutes implements Routes {
 			function(string $match): bool {
 				parse_str((string) parse_url($match, PHP_URL_QUERY), $query);
 				return $this->includes($this->uri, $query, $this->defaults($query))
-					|| ($this->patterns($query) && $this->allowed($this->patterns($query)));
+					|| ($this->patterns($query) !== [] && $this->allowed($this->patterns($query)));
 			},
 			ARRAY_FILTER_USE_KEY
 		);
@@ -32,11 +36,11 @@ final class QueryRoutes implements Routes {
 		$real = array_intersect_key($this->uri->query(), $patterns);
 		return array_reduce(
 			array_keys($real),
-			function(bool $allowed, string $field) use ($real, $patterns): bool {
+			static function(bool $allowed, string $field) use ($real, $patterns): bool {
 					return $allowed && preg_match(
 						sprintf('~^%s$~', $patterns[$field]),
 						(string) $real[$field]
-					);
+					) === 1;
 			},
 			true
 		);
@@ -60,7 +64,7 @@ final class QueryRoutes implements Routes {
 	 */
 	private function defaults(array $query): array {
 		return array_map(
-			function(string $parameter): string {
+			static function(string $parameter): string {
 				return substr($parameter, 1, -1);
 			},
 			preg_grep('~\(\w*\d*\)$~', $query)
@@ -74,7 +78,7 @@ final class QueryRoutes implements Routes {
 	 */
 	private function patterns(array $query): array {
 		return array_map(
-			function(string $parameter): string {
+			static function(string $parameter): string {
 				preg_match('~\.*\s(.*)$~', substr($parameter, 1, -1), $matches);
 				return str_replace(' ', '+', $matches[1]);
 			},
