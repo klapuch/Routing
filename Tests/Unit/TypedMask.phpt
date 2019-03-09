@@ -17,7 +17,7 @@ require __DIR__ . '/../bootstrap.php';
 final class TypedMask extends Tester\TestCase {
 	public function testTypeAwareParameters() {
 		Assert::same(
-			['a' => 1, 'b' => 123456789, 'c' => '1ab', 'd' => 'ba1'],
+			['a' => 1, 'b' => 123456789, 'c' => '1ab', 'd' => 'ba1', 'e' => '1,2'],
 			(new Routing\TypedMask(
 				new Routing\FakeMask(
 					[
@@ -25,6 +25,7 @@ final class TypedMask extends Tester\TestCase {
 						'b' => '123456789',
 						'c' => '1ab',
 						'd' => 'ba1',
+						'e' => '1,2',
 					]
 				)
 			))->parameters()
