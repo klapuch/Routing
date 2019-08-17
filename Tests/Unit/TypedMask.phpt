@@ -15,17 +15,16 @@ use Tester\Assert;
 require __DIR__ . '/../bootstrap.php';
 
 final class TypedMask extends Tester\TestCase {
-	public function testTypeAwareParameters() {
+	public function testParsingByPredefinedTypes() {
+		$_SERVER['ROUTE_TYPE_QUERY'] = 'a=int&b=string';
 		Assert::same(
-			['a' => 1, 'b' => 123456789, 'c' => '1ab', 'd' => 'ba1', 'e' => '1,2'],
+			['a' => 1, 'b' => '123456789', 'c' => 'test'],
 			(new Routing\TypedMask(
 				new Routing\FakeMask(
 					[
 						'a' => '1',
 						'b' => '123456789',
-						'c' => '1ab',
-						'd' => 'ba1',
-						'e' => '1,2',
+						'c' => 'test',
 					]
 				)
 			))->parameters()

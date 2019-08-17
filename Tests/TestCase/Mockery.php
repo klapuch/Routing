@@ -3,10 +3,11 @@ declare(strict_types = 1);
 
 namespace Klapuch\Routing\TestCase;
 
+use Mockery\LegacyMockInterface;
 use Tester;
 
 abstract class Mockery extends Tester\TestCase {
-	final protected function mock(string $class): \Mockery\MockInterface {
+	final protected function mock(string $class): LegacyMockInterface {
 		return \Mockery::mock($class);
 	}
 
